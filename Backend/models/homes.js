@@ -8,6 +8,6 @@ module.exports=class homeModel {
     this.description=description
   }
   save(){
-    console.log();
+    console.log("this is chek");
   }
 }
