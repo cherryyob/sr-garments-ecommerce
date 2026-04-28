@@ -1,13 +1,22 @@
-module.exports=class homeModel {
-  constructor(id,name,price,rating,photo,description){
-    this.id=id,
-    this.name=name,
-    this.price=price,
-    this.rating=rating,
-    this.photo=photo,
-    this.description=description
+const fs = require("fs");
+const path = require("path");
+const pathRoot = require("../utils/pathUtil");
+const root = path.join(pathRoot, "data", "items.json");
+module.exports = class homeModel {
+  constructor(id, name, price, rating, photo, description) {
+    ((this.id = id),
+      (this.name = name),
+      (this.price = price),
+      (this.rating = rating),
+      (this.photo = photo),
+      (this.description = description));
   }
-  save(){
+  save() {
     console.log("this is chek");
   }
-}
+  static async fatchAll(calback) {
+    await fs.readFile(root, (err, data) => {
+      calback(!err ? JSON.parse(data) : []);
+    });
+  }
+};
