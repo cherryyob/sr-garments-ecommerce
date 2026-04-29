@@ -1,14 +1,18 @@
+import { IoPerson } from "react-icons/io5";
+import { BsEmojiHeartEyesFill, BsBagFill } from "react-icons/bs";
+import { Link } from "react-router-dom";
+
 const Header = () => {
   return (
     <header>
       <div className="logo_container">
-        <a href="#">
+        <Link to="/">
           <img
             className="srgarments_home"
-            src="../../images/logo.jpeg"
+            src="../../images/logo.png"
             alt="SR GARMENTS Home"
           />
-        </a>
+        </Link>
       </div>
       <nav className="nav_bar">
         <a href="#">Men</a>
@@ -29,24 +33,21 @@ const Header = () => {
       </div>
       <div className="action_bar">
         <div className="action_container">
-          <span className="material-symbols-outlined action_icon">person</span>
+          <IoPerson />
           <span className="action_name">Profile</span>
         </div>
 
         <div className="action_container">
-          <span className="material-symbols-outlined action_icon">
-            favorite
-          </span>
+          <BsEmojiHeartEyesFill />
+
           <span className="action_name">Wishlist</span>
         </div>
 
-        <div className="action_container">
-          <span className="material-symbols-outlined action_icon">
-            shopping_bag
-          </span>
+        <Link to="/bag" className="action_container">
+          <BsBagFill />
           <span className="action_name">Bag</span>
           <span className="bag-item-count">0</span>
-        </div>
+        </Link>
       </div>
     </header>
   );
