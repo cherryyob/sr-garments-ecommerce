@@ -1,11 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./componant/routes/App.jsx";
+import App from "./routes/App.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Home from "./componant/routes/Home.jsx";
-import Bag from "./componant/routes/bag.jsx";
+import Home from "./routes/Home.jsx";
+import Bag from "./routes/bag.jsx";
 import srStore from "../store/index.js";
 import { Provider } from "react-redux";
 

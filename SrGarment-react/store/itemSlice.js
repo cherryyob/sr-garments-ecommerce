@@ -4,12 +4,13 @@ defaultItem;
 
 const itemsSlice = createSlice({
   name: "home",
-  initialState: [defaultItem],
+  initialState: [],
   reducers: {
     addInitialItems: (store, action) => {
-      console.log("fatchAll Reducer");
+      return (store = action.payload);
+      console.log("fatchAll Reducer", action);
     },
   },
 });
 export default itemsSlice;
-export const addInitialItems = itemsSlice.actions;
+export const { addInitialItems } = itemsSlice.actions;

@@ -1,7 +1,7 @@
-import BagSummary from "../BagSummry";
-import Header from "../Header";
-import Footer from "../Footer";
-import BagItem from "../BagItem";
+import BagSummary from "../componant/BagSummry";
+import Header from "../componant/Header";
+import Footer from "../componant/Footer";
+import BagItem from "../componant/BagItem";
 BagItem;
 const Bag = () => {
   return (

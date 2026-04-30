@@ -1,6 +1,7 @@
-const express=require("express");
-const userRouter=express.Router();
-const userController=require("../controller/userController")
-userRouter.get("/items",userController.home)
+const express = require("express");
+const userRouter = express.Router();
 
-module.exports=userRouter;
+const userController = require("../controller/userController");
+userRouter.get("/items", userController.home);
+
+module.exports = userRouter;

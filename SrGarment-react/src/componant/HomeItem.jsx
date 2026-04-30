@@ -1,7 +1,4 @@
-import { useSelector } from "react-redux";
-
 const HomeItem = ({ item }) => {
-  useSelector((items) => console.log(items.state));
   return (
     <div className="item-container">
       {}
@@ -16,7 +13,7 @@ const HomeItem = ({ item }) => {
         <span className="original-price">Rs {item.original_price}</span>
         <span className="discount">({item.discount_percentage}% OFF)</span>
       </div>
-      <button>Add to Bag</button>
+      <button className="btn btn-add-bag btn-success">Add to Bag</button>
     </div>
   );
 };
