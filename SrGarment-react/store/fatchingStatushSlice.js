@@ -5,13 +5,13 @@ const fatchingStatusSlice = createSlice({
   initialState: { fatchgDone: false, currantlyFatching: false },
   reducers: {
     markFatchDone: (state) => {
-      return (state.fatchingDone = true);
+      state.fatchgDone = true;
     },
     fatchingOnWay: (state) => {
-      return (state.currantlyFatching = true);
+      state.currantlyFatching = true;
     },
     fatchingFinished: (state) => {
-      return (state.currantlyFatching = false);
+      state.currantlyFatching = false;
     },
   },
 });

@@ -3,13 +3,20 @@ import Footer from "../componant/Footer";
 import HomeItem from "../componant/HomeItem";
 import { Outlet } from "react-router-dom";
 import FatchingItems from "../componant/FatchItems";
+import { useSelector } from "react-redux";
+import SpinLoader from "../componant/SpinLoader";
 
 function App() {
+  const fatchingStatus = useSelector((store) => store.faatchStatus);
+  console.log("from  app", fatchingStatus);
+
   return (
     <>
       <Header />
       <FatchingItems />
-      <Outlet />
+
+      {fatchingStatus.currantlyFatching ? <SpinLoader /> : <Outlet />}
+
       <Footer />
     </>
   );

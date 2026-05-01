@@ -5,3 +5,8 @@ exports.home = (req, res, next) => {
     res.send(items);
   });
 };
+exports.addToBag = (req, res, next) => {
+  const { id } = req.body;
+  res.status(200).json({ mess: "added to bag", recevedId: id });
+  console.log(req.body);
+};

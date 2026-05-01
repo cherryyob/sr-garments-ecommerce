@@ -16,6 +16,7 @@ module.exports = class homeModel {
   }
   static async fatchAll(calback) {
     await fs.readFile(root, (err, data) => {
+      // await new Promise((resolve, reject) => setTimeout(() => resolve(), 4000));
       calback(!err ? JSON.parse(data) : []);
     });
   }

@@ -1,4 +1,18 @@
+import { useEffect } from "react";
+
 const HomeItem = ({ item }) => {
+  const addToBag = () => {
+    try {
+      fetch("http://localhost:3000/bag", {
+        method: "post",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: item.id }),
+      });
+    } catch (err) {
+      console.log("errr while add to bag:", err);
+    }
+  };
+
   return (
     <div className="item-container">
       {}
@@ -13,7 +27,9 @@ const HomeItem = ({ item }) => {
         <span className="original-price">Rs {item.original_price}</span>
         <span className="discount">({item.discount_percentage}% OFF)</span>
       </div>
-      <button className="btn btn-add-bag btn-success">Add to Bag</button>
+      <button onClick={addToBag} className="btn btn-add-bag btn-success">
+        Add to Bag
+      </button>
     </div>
   );
 };
