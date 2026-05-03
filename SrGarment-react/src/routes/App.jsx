@@ -8,7 +8,6 @@ import SpinLoader from "../componant/SpinLoader";
 
 function App() {
   const fatchingStatus = useSelector((store) => store.faatchStatus);
-  console.log("from  app", fatchingStatus);
 
   return (
     <>

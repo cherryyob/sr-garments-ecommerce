@@ -14,6 +14,7 @@ module.exports = class homeModel {
   save() {
     console.log("this is chek");
   }
+  static saveBagItem(id) {}
   static async fatchAll(calback) {
     await fs.readFile(root, (err, data) => {
       // await new Promise((resolve, reject) => setTimeout(() => resolve(), 4000));

@@ -1,9 +1,12 @@
 import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addingToBag } from "../../store/bagItemSlice";
 
 const HomeItem = ({ item }) => {
-  const addToBag = () => {
+  const dispatch = useDispatch();
+  const addToBag = async () => {
     try {
-      fetch("http://localhost:3000/bag", {
+      await fetch("http://localhost:3000/bag", {
         method: "post",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: item.id }),
@@ -11,6 +14,7 @@ const HomeItem = ({ item }) => {
     } catch (err) {
       console.log("errr while add to bag:", err);
     }
+    dispatch(addingToBag(10));
   };
 
   return (
