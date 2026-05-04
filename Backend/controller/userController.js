@@ -8,11 +8,13 @@ exports.home = (req, res, next) => {
 };
 exports.addToBag = (req, res, next) => {
   const { id } = req.body;
-  res.status(200).json({ mess: "added to bag", recevedId: id });
   const bag = new bagModel(id);
   bag.save().then((rsl) => {
-    //console.log(rsl);
+    res.status(200).json(rsl);
   });
-
-  console.log(req.body);
+};
+exports.getBag = (req, res, next) => {
+  bagModel.fetchAllBag().then((data) => {
+    res.status(200).json(data.length);
+  });
 };

@@ -9,11 +9,26 @@ module.exports = class bagModel {
     this.id = id;
   }
   async save() {
-    console.log("save");
+    let allBagData = [];
+    const fileContaint = await fs.readFile(root, "utf8");
+    allBagData = JSON.parse(fileContaint);
+
     try {
-      await fs.writeFile(root, JSON.stringify(this.id));
+      if (!allBagData.includes(this.id)) {
+        allBagData.push(this.id);
+        await fs.writeFile(root, JSON.stringify(allBagData));
+        return allBagData;
+      } else console.log("this id is already :", this.id);
     } catch (err) {
       err && console.log(err);
+    }
+  }
+  static async fetchAllBag() {
+    try {
+      const fileContaint = await fs.readFile(root, "utf8");
+      return JSON.parse(fileContaint);
+    } catch (err) {
+      console.log("error while fetching from bag", err);
     }
   }
 };

@@ -21,4 +21,5 @@ module.exports = class homeModel {
       calback(!err ? JSON.parse(data) : []);
     });
   }
+  static async fetchBag() {}
 };
