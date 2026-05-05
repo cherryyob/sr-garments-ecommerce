@@ -23,9 +23,16 @@ module.exports = class bagModel {
       err && console.log(err);
     }
   }
+  static async saveAllToBag(listItem) {
+    await fs.writeFile(root, JSON.stringify(listItem));
+
+    return listItem;
+  }
+
   static async fetchAllBag() {
     try {
       const fileContaint = await fs.readFile(root, "utf8");
+
       return JSON.parse(fileContaint);
     } catch (err) {
       console.log("error while fetching from bag", err);

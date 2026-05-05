@@ -1,10 +1,15 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addingToBag } from "../../store/bagItemSlice";
+import { MdAddShoppingCart } from "react-icons/md";
+import { FcDeleteDatabase } from "react-icons/fc";
 
 const HomeItem = ({ item }) => {
+  const bagItem = useSelector((store) => store.bagItemsState);
+
+  const add = "Add To Bag";
   const dispatch = useDispatch();
-  const addToBag = async () => {
+  const handelAddToBagButton = async () => {
     try {
       const response = await fetch("http://localhost:3000/bag", {
         method: "post",
@@ -15,11 +20,20 @@ const HomeItem = ({ item }) => {
         throw new Error("FaildTo Add To Bag");
       } else {
         const updatedBagCount = await response.json();
-        dispatch(addingToBag(updatedBagCount.length));
+        dispatch(addingToBag(updatedBagCount));
       }
     } catch (err) {
-      console.log("errr while add to bag:", err);
+      console.log("errr may be already in your cart:", err);
     }
+  };
+  const handelRemoveButton = async () => {
+    const response = await fetch("http://localhost:3000/removeItemById", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: item.id }),
+    });
+    const updatedBagCount = await response.json();
+    dispatch(addingToBag(updatedBagCount));
   };
 
   return (
@@ -37,9 +51,23 @@ const HomeItem = ({ item }) => {
           <span className="original-price">Rs {item.original_price}</span>
           <span className="discount">({item.discount_percentage}% OFF)</span>
         </div>
-        <button onClick={addToBag} className="btn btn-add-bag btn-success">
-          Add to Bag
-        </button>
+        {bagItem.includes(item.id) ? (
+          <button
+            type="button"
+            className="btn btn-add-bag btn-danger"
+            onClick={handelRemoveButton}
+          >
+            <FcDeleteDatabase /> Remove
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={handelAddToBagButton}
+            className="btn btn-add-bag btn-success"
+          >
+            <MdAddShoppingCart /> Add To Bag
+          </button>
+        )}
       </div>
     </>
   );

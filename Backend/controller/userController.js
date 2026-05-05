@@ -15,6 +15,27 @@ exports.addToBag = (req, res, next) => {
 };
 exports.getBag = (req, res, next) => {
   bagModel.fetchAllBag().then((data) => {
-    res.status(200).json(data.length);
+    res.status(200).json(data);
+  });
+};
+exports.removeItemById = (req, res, next) => {
+  const { id } = req.body;
+  bagModel.fetchAllBag().then((allData) => {
+    allData = allData.filter((data) => data !== id);
+    bagModel
+      .saveAllToBag(allData)
+      .then((dataUpdate) => res.status(200).json(dataUpdate));
+  });
+};
+exports.bagItemFindInItems = (req, res, next) => {
+  const cartFulData = [];
+  homeModel.fatchAll((items) => {
+    items.map((item) => {
+      bagModel.fetchAllBag().then((allBagData) => {
+        cartFulData.push(allBagData.filter((id) => items.id === id));
+        console.log(cartFulData);
+        res.status(200).json(cartFulData);
+      });
+    });
   });
 };

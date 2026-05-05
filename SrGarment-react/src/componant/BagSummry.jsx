@@ -1,4 +1,24 @@
+import { useEffect } from "react";
+
 const BagSummary = () => {
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch("http://localhost:3000/bag", { signal })
+      .then((data) => data.json())
+      .then((bagData) => {
+        fetch("http://localhost:3000/bagItemFindInItems", { signal })
+          .then((data) => data.json())
+          .then((cartFullData) => {
+            console.log("match item i n item", cartFullData);
+          });
+        console.log("bagDDtta", bagData);
+      });
+    return () => {
+      controller.abort();
+    };
+  }, []);
+
   const summry = {
     totalItem: 3,
     totalMRP: 1200,
