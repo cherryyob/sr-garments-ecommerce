@@ -1,3 +1,4 @@
+const { json } = require("body-parser");
 const bagModel = require("../models/bag");
 const homeModel = require("../models/homes");
 
@@ -28,14 +29,15 @@ exports.removeItemById = (req, res, next) => {
   });
 };
 exports.bagItemFindInItems = (req, res, next) => {
-  const cartFulData = [];
   homeModel.fatchAll((items) => {
-    items.map((item) => {
-      bagModel.fetchAllBag().then((allBagData) => {
-        cartFulData.push(allBagData.filter((id) => items.id === id));
+    bagModel.fetchAllBag().then((bagItem) => {
+      const cartFulData = bagItem.map((bagSingleId) => {
+        return items.items.find((singleItem) => singleItem.id === bagSingleId);
+
         console.log(cartFulData);
-        res.status(200).json(cartFulData);
       });
+      res.status(200).json(cartFulData);
+      console.log(bagItem, "bag item");
     });
   });
 };

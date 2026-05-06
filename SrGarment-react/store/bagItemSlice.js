@@ -2,12 +2,15 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const bagItemSlice = createSlice({
   name: "bagItem",
-  initialState: [],
+  initialState: { bageItemId: [], bagItemFullDetails: [] },
   reducers: {
     addingToBag: (state, action) => {
-      return action.payload;
+      state.bageItemId = action.payload;
+    },
+    addItemFullDetails: (state, action) => {
+      state.bagItemFullDetails = action.payload;
     },
   },
 });
 export default bagItemSlice;
-export const { addingToBag } = bagItemSlice.actions;
+export const { addingToBag, addItemFullDetails } = bagItemSlice.actions;

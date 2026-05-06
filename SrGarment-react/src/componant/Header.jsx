@@ -4,7 +4,10 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Header = () => {
-  const bagCount = useSelector((store) => store.bagItemsState.length);
+  const bagCount = useSelector(
+    (store) => store.bagItemsState.bageItemId.length,
+  );
+  console.log("this is ", bagCount);
   return (
     <header>
       <div className="logo_container">

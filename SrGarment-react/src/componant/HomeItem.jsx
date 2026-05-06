@@ -5,7 +5,7 @@ import { MdAddShoppingCart } from "react-icons/md";
 import { FcDeleteDatabase } from "react-icons/fc";
 
 const HomeItem = ({ item }) => {
-  const bagItem = useSelector((store) => store.bagItemsState);
+  const bagItem = useSelector((store) => store.bagItemsState.bageItemId);
 
   const add = "Add To Bag";
   const dispatch = useDispatch();
