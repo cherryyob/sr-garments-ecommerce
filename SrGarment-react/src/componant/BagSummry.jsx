@@ -1,14 +1,23 @@
+import { useMemo } from "react";
 import { useSelector } from "react-redux";
 const BagSummary = () => {
   const itemDetails = useSelector(
     (store) => store.bagItemsState.bagItemFullDetails,
   );
-
-  // const totalMrp = itemDetails.map((item) => {
-  //   const mrp = mrp + item.original_price;
-  // });
-  // console.log("jhjhjhs", totalMrp);
-
+  const cartSummry = useMemo(() => {
+    return itemDetails.reduce(
+      (acc, item) => {
+        acc.totalPrice += item.original_price;
+        acc.totalPrieAfterDiscount += item.current_price;
+        return acc;
+      },
+      {
+        totalPrice: 0,
+        totalPrieAfterDiscount: 0,
+      },
+    );
+  }, [itemDetails]);
+  console.log(cartSummry);
   const summry = {
     totalItem: 3,
     totalMRP: 1200,
@@ -19,16 +28,16 @@ const BagSummary = () => {
     <div className="bag-summary">
       <div className="bag-details-container">
         <div className="price-header">
-          PRICE DETAILS ({summry.totalItem} Items){" "}
+          PRICE DETAILS ({itemDetails.length} Items){" "}
         </div>
         <div className="price-item">
           <span className="price-item-tag">Total MRP</span>
-          <span className="price-item-value">₹{summry.totalMRP}</span>
+          <span className="price-item-value">₹{cartSummry.totalPrice}</span>
         </div>
         <div className="price-item">
           <span className="price-item-tag">Discount on MRP</span>
           <span className="price-item-value priceDetail-base-discount">
-            -₹{summry.totalDiscount}
+            -₹{cartSummry.totalPrice - cartSummry.totalPrieAfterDiscount}
           </span>
         </div>
         <div className="price-item">
@@ -38,7 +47,9 @@ const BagSummary = () => {
         <hr />
         <div className="price-footer">
           <span className="price-item-tag">Total Amount</span>
-          <span className="price-item-value">₹{summry.finalPayment}</span>
+          <span className="price-item-value">
+            ₹{cartSummry.totalPrieAfterDiscount}
+          </span>
         </div>
       </div>
       <button className="btn-place-order">
