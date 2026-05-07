@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemFullDetails } from "../../store/bagItemSlice";
+import { handelRemoveButton } from "../../store/bagItemSlice";
 const BagItem = () => {
   const dispatch = useDispatch();
   const items = useSelector((store) => store.bagItemsState.bagItemFullDetails);
+
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -61,7 +63,7 @@ const BagItem = () => {
 
           <div
             className="remove-from-cart"
-            onClick={() => console.log("remove", item.id)}
+            onClick={() => handelRemoveButton(item.id, dispatch)}
           >
             X
           </div>

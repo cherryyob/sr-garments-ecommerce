@@ -1,4 +1,14 @@
+import { useSelector } from "react-redux";
 const BagSummary = () => {
+  const itemDetails = useSelector(
+    (store) => store.bagItemsState.bagItemFullDetails,
+  );
+
+  // const totalMrp = itemDetails.map((item) => {
+  //   const mrp = mrp + item.original_price;
+  // });
+  // console.log("jhjhjhs", totalMrp);
+
   const summry = {
     totalItem: 3,
     totalMRP: 1200,

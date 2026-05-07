@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addingToBag } from "../../store/bagItemSlice";
 import { MdAddShoppingCart } from "react-icons/md";
 import { FcDeleteDatabase } from "react-icons/fc";
+import { handelRemoveButton } from "../../store/bagItemSlice";
 
 const HomeItem = ({ item }) => {
   const bagItem = useSelector((store) => store.bagItemsState.bageItemId);
@@ -26,15 +27,6 @@ const HomeItem = ({ item }) => {
       console.log("errr may be already in your cart:", err);
     }
   };
-  const handelRemoveButton = async () => {
-    const response = await fetch("http://localhost:3000/removeItemById", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: item.id }),
-    });
-    const updatedBagCount = await response.json();
-    dispatch(addingToBag(updatedBagCount));
-  };
 
   return (
     <>
@@ -55,7 +47,9 @@ const HomeItem = ({ item }) => {
           <button
             type="button"
             className="btn btn-add-bag btn-danger"
-            onClick={handelRemoveButton}
+            onClick={() => {
+              handelRemoveButton(item.id, dispatch);
+            }}
           >
             <FcDeleteDatabase /> Remove
           </button>
