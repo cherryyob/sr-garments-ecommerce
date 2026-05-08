@@ -8,6 +8,8 @@ import Home from "./routes/Home.jsx";
 import Bag from "./routes/bag.jsx";
 import srStore from "../store/index.js";
 import { Provider } from "react-redux";
+import Profile from "./routes/Profile.jsx";
+import WishList from "./routes/WishList.jsx";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +21,8 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       { path: "/bag", element: <Bag /> },
+      { path: "/Profile", element: <Profile /> },
+      { path: "/wishlist", element: <WishList /> },
     ],
   },
 ]);
