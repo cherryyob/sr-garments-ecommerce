@@ -404,3 +404,15 @@ a.action_container:link {
 .spinner {
   margin: 100px 0px;
 }
+.btn-pop {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.btn-pop:hover {
+  transform: scale(1.05);
+  /* Scales the button up by 5% */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  /* Adds a shadow for a 'lifting' effect */
+  z-index: 1;
+  /* Ensures the button pops OVER other elements */
+}

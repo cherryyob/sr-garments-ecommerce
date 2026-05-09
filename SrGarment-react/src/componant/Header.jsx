@@ -16,7 +16,10 @@ import SearchBar from "./SearchBar";
 import { useSelector } from "react-redux";
 
 const Header = () => {
-  const bagCount = useSelector((store) => store.bagItemsState.length || 0);
+  const bagCount = useSelector(
+    (store) => store.bagItemsState.bageItemId.length || 0,
+  );
+  console.log("bag item", bagCount);
 
   const iconVariants = {
     hover: {

@@ -6,12 +6,14 @@ BagItem;
 const Bag = () => {
   return (
     <main>
-      <div class="bag-page">
+      <div class="bag-page d-flex">
         <div className="bag-items-container">
           {" "}
           <BagItem />
         </div>
-        <BagSummary />
+        <div>
+          <BagSummary />
+        </div>
       </div>
     </main>
   );

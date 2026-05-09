@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addingToBag } from "../../store/bagItemSlice";
 import { MdAddShoppingCart } from "react-icons/md";
 import { FcDeleteDatabase } from "react-icons/fc";
+import { FaRegHeart } from "react-icons/fa";
 import { handelRemoveButton } from "../../store/bagItemSlice";
 
 const HomeItem = ({ item }) => {
@@ -43,25 +44,34 @@ const HomeItem = ({ item }) => {
           <span className="original-price">Rs {item.original_price}</span>
           <span className="discount">({item.discount_percentage}% OFF)</span>
         </div>
-        {bagItem.includes(item.id) ? (
-          <button
-            type="button"
-            className="btn btn-add-bag btn-danger"
-            onClick={() => {
-              handelRemoveButton(item.id, dispatch);
-            }}
-          >
-            <FcDeleteDatabase /> Remove
-          </button>
-        ) : (
+        <div className="d-flex w-100 gap-2">
+          {bagItem.includes(item.id) ? (
+            <button
+              type="button"
+              className="btn btn-add-bag btn-danger w-75 btn-pop btn-pop:hover"
+              onClick={() => {
+                handelRemoveButton(item.id, dispatch);
+              }}
+            >
+              <FcDeleteDatabase /> Remove
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handelAddToBagButton}
+              className="btn btn-add-bag btn-success w-75 btn-pop btn-pop:hover"
+            >
+              <MdAddShoppingCart /> Add To Bag
+            </button>
+          )}
           <button
             type="button"
             onClick={handelAddToBagButton}
-            className="btn btn-add-bag btn-success"
+            className="btn btn-add-bag btn-success w-25  btn-pop btn-pop:hover"
           >
-            <MdAddShoppingCart /> Add To Bag
+            <FaRegHeart />
           </button>
-        )}
+        </div>
       </div>
     </>
   );
