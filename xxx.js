@@ -1,0 +1,10 @@
+company: 'j',
+[0]   item_name: 'jh',
+[0]   image: 'jhj',
+[0]   original_price: '56456',
+[0]   current_price: '564',
+[0]   discount_percentage: '5',
+[0]   delivery_date: '5454',
+[0]   return_period: '564',
+[0]   stars: '5',
+[0]   count: '5456'
