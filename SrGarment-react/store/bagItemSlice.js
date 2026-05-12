@@ -13,7 +13,7 @@ const bagItemSlice = createSlice({
     },
     removeFromFullDetails: (state, action) => {
       state.bagItemFullDetails = state.bagItemFullDetails.filter(
-        (item) => item.id !== action.payload,
+        (item) => item.idName !== action.payload,
       );
     },
   },

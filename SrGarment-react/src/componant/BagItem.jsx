@@ -63,7 +63,7 @@ const BagItem = () => {
 
           <div
             className="remove-from-cart"
-            onClick={() => handelRemoveButton(item.id, dispatch)}
+            onClick={() => handelRemoveButton(item.idName, dispatch)}
           >
             X
           </div>

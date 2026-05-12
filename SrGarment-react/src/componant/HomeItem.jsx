@@ -16,7 +16,7 @@ const HomeItem = ({ item }) => {
       const response = await fetch("http://localhost:3000/bag", {
         method: "post",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: item.id }),
+        body: JSON.stringify({ id: item.idName }),
       });
       if (!response.ok) {
         throw new Error("FaildTo Add To Bag");
@@ -45,12 +45,12 @@ const HomeItem = ({ item }) => {
           <span className="discount">({item.discount_percentage}% OFF)</span>
         </div>
         <div className="d-flex w-100 gap-2">
-          {bagItem.includes(item.id) ? (
+          {bagItem.includes(item.idName) ? (
             <button
               type="button"
               className="btn btn-add-bag btn-danger w-75 btn-pop btn-pop:hover"
               onClick={() => {
-                handelRemoveButton(item.id, dispatch);
+                handelRemoveButton(item.idName, dispatch);
               }}
             >
               <FcDeleteDatabase /> Remove

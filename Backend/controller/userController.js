@@ -3,8 +3,9 @@ const bagModel = require("../models/bag");
 const homeModel = require("../models/homes");
 
 exports.home = (req, res, next) => {
-  homeModel.fatchAll((items) => {
-    res.send(items);
+  homeModel.find().then((row) => {
+    const items = row;
+    res.send({ items });
   });
 };
 exports.addToBag = (req, res, next) => {
@@ -29,12 +30,12 @@ exports.removeItemById = (req, res, next) => {
   });
 };
 exports.bagItemFindInItems = (req, res, next) => {
-  homeModel.fatchAll((items) => {
+  homeModel.find().then((items) => {
     bagModel.fetchAllBag().then((bagItem) => {
       const cartFulData = bagItem.map((bagSingleId) => {
-        return items.items.find((singleItem) => singleItem.id === bagSingleId);
+        return items.find((singleItem) => singleItem.idName === bagSingleId);
 
-        console.log(cartFulData);
+        console.log(cartFulData, " :bagData");
       });
       res.status(200).json(cartFulData);
       console.log(bagItem, "bag item");

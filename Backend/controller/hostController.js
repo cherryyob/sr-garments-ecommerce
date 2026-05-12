@@ -33,3 +33,7 @@ exports.postAddItemToDataBase = (req, res, next) => {
     res.status(200).render("getProduct");
   });
 };
+const bulkDataSave = async (bulkData) => {
+  const rsl = await itemMdel.insertMany(bulkData);
+  console.log(rsl, ": bulk data messege");
+};

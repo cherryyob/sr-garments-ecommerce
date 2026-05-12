@@ -5,6 +5,7 @@ const root = path.join(pathRoot, "data", "items.json");
 const { default: mongoose } = require("mongoose");
 
 const productSchema = mongoose.Schema({
+  idName:{type:String,require:true},
   image: { type: String, require: true },
   company: { type: String, require: true },
   item_name: { type: String, require: true },
@@ -18,6 +19,8 @@ const productSchema = mongoose.Schema({
     count: { type: Number, require: true },
   },
 });
+
+
 
 module.exports = mongoose.model("itemMdel", productSchema);
 /*
