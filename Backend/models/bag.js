@@ -1,9 +1,11 @@
-const fs = require("fs").promises;
-const path = require("path");
-const pathRoot = require("../utils/pathUtil");
-const { json } = require("stream/consumers");
-const root = path.join(pathRoot, "data", "bagItemList.json");
+const { mongoose } = require("mongoose");
 
+const bagSchema = mongoose.Schema({
+  bagId: { type: String, require: true, unique: true },
+});
+module.exports = mongoose.model("bag", bagSchema);
+
+/*
 module.exports = class bagModel {
   constructor(id) {
     this.id = id;
@@ -39,3 +41,4 @@ module.exports = class bagModel {
     }
   }
 };
+*/

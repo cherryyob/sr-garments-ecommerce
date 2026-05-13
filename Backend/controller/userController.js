@@ -10,30 +10,39 @@ exports.home = (req, res, next) => {
 };
 exports.addToBag = (req, res, next) => {
   const { id } = req.body;
-  const bag = new bagModel(id);
-  bag.save().then((rsl) => {
-    res.status(200).json(rsl);
-  });
+  console.log("idddd", id);
+  const bag = new bagModel({ bagId: id });
+  bag
+    .save()
+    .then(() => {
+      bagModel.find().then((data) => {
+        console.log("rsl : ", data);
+        res.status(200).json(data);
+      });
+    })
+    .catch((err) => {
+      console.log("error while saving in bag module : ", err);
+    });
 };
 exports.getBag = (req, res, next) => {
-  bagModel.fetchAllBag().then((data) => {
+  bagModel.find().then((data) => {
     res.status(200).json(data);
   });
 };
-exports.removeItemById = (req, res, next) => {
+exports.removeItemById = async (req, res, next) => {
   const { id } = req.body;
-  bagModel.fetchAllBag().then((allData) => {
-    allData = allData.filter((data) => data !== id);
-    bagModel
-      .saveAllToBag(allData)
-      .then((dataUpdate) => res.status(200).json(dataUpdate));
+  await bagModel.deleteOne({ bagId: id });
+  bagModel.find().then((allData) => {
+    res.status(200).json(allData);
   });
 };
 exports.bagItemFindInItems = (req, res, next) => {
   homeModel.find().then((items) => {
-    bagModel.fetchAllBag().then((bagItem) => {
+    bagModel.find().then((bagItem) => {
       const cartFulData = bagItem.map((bagSingleId) => {
-        return items.find((singleItem) => singleItem.idName === bagSingleId);
+        return items.find(
+          (singleItem) => singleItem.idName === bagSingleId.bagId,
+        );
 
         console.log(cartFulData, " :bagData");
       });
