@@ -5,6 +5,7 @@ import { MdAddShoppingCart } from "react-icons/md";
 import { FcDeleteDatabase } from "react-icons/fc";
 import { FaRegHeart } from "react-icons/fa";
 import { handelRemoveButton } from "../../store/bagItemSlice";
+import { Link } from "react-router-dom";
 
 const HomeItem = ({ item }) => {
   const bagItem = useSelector((store) => store.bagItemsState.bageItemId);
@@ -45,12 +46,14 @@ const HomeItem = ({ item }) => {
           e.currentTarget.classList.replace("shadow", "shadow-sm");
         }}
       >
-        <img
-          className="card-img-top rounded"
-          src={item.image}
-          alt="item image"
-          style={{ height: "280px", objectFit: "cover" }}
-        />
+        <Link to={`/itemDetails/${item.idName}`}>
+          <img
+            className="card-img-top rounded"
+            src={item.image}
+            alt="item image"
+            style={{ height: "280px", objectFit: "cover" }}
+          />
+        </Link>
 
         <div className="card-body p-2">
           <div className="rating small fw-bold mb-1">

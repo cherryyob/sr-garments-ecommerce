@@ -1,7 +1,7 @@
-import BagSummary from "../componant/BagSummry";
-import Header from "../componant/Header";
-import Footer from "../componant/Footer";
-import BagItem from "../componant/BagItem";
+import BagSummary from "./SrGarment-react/src/componant/BagSummry";
+import Header from "./SrGarment-react/src/componant/Header";
+import Footer from "./SrGarment-react/src/componant/Footer";
+import BagItem from "./SrGarment-react/src/componant/BagItem";
 BagItem;
 const Bag = () => {
   return (

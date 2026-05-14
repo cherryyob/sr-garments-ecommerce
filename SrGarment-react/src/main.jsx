@@ -10,6 +10,7 @@ import srStore from "../store/index.js";
 import { Provider } from "react-redux";
 import Profile from "./routes/Profile.jsx";
 import WishList from "./routes/WishList.jsx";
+import ProductDetails from "./routes/ProductDetails.jsx";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
       { path: "/bag", element: <Bag /> },
       { path: "/Profile", element: <Profile /> },
       { path: "/wishlist", element: <WishList /> },
+      { path: "/itemDetails/:idName", element: <ProductDetails /> },
     ],
   },
 ]);

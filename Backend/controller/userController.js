@@ -8,6 +8,7 @@ exports.home = (req, res, next) => {
     res.send({ items });
   });
 };
+
 exports.addToBag = (req, res, next) => {
   const { id } = req.body;
   console.log("idddd", id);
