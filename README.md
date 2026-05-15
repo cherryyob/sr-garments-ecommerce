@@ -31,4 +31,4 @@ A modern, high-performance clothing store application. This project demonstrates
 
 1. **Clone the repo**
    ```bash
-   git clone [https://github.com/your-username/sr-garments.git](https://github.com/your-username/sr-garments.git)
+   
