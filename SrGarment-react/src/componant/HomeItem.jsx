@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 
 const HomeItem = ({ item }) => {
   const bagItem = useSelector((store) => store.bagItemsState.bageItemId);
-  console.log(bagItem);
 
   const add = "Add To Bag";
   const dispatch = useDispatch();

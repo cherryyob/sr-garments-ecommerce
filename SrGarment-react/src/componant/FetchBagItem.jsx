@@ -11,7 +11,6 @@ const FetchBagItem = () => {
       .then((rsl) => rsl.json())
       .then((data) => {
         dispatch(addingToBag(data));
-        console.log(data, "data receved as items");
       });
     return () => {
       controller.abort();

@@ -23,7 +23,6 @@ const FatchingItems = () => {
     fetch("http://localhost:3000/items", { signal })
       .then((res) => res.json())
       .then(({ items }) => {
-        console.log(items, "data receved as items");
         dispatch(markFatchDone());
         dispatch(addInitialItems(items));
         dispatch(fatchingFinished());

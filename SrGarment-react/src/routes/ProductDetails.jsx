@@ -1,27 +1,47 @@
 import React, { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { productDetailsAction } from "../../store/productDetails";
 
 const ProductDetails = () => {
+  const dispatch = useDispatch();
+  const product = useSelector((store) => store.productDetailsData);
+  console.log(product, "product state");
+
   const { idName } = useParams();
-  useEffect(async () => {
-    const idNameData = await fetch("http://localhost:3000/bag", {
-      method: "post",
-      headers: { ContentType: "application/json" },
-      body: JSON.stringify({ id: idName }),
-    });
+  useEffect(() => {
+    const fetchingData = async () => {
+      const idNameData = await fetch(
+        "http://localhost:3000/getProductDetails",
+        {
+          method: "post",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id: idName }),
+        },
+      );
+      if (idNameData.ok) {
+        const data = await idNameData.json();
+        console.log(data, "befor dispatch ");
+        dispatch(productDetailsAction(data));
+        console.log(product, "after dispatch ");
+      } else {
+        console.error("Failed to fetch product");
+      }
+    };
+    fetchingData();
   }, [idName]);
 
-  const product = {
-    idName: "001",
-    image: "https://via.placeholder.com/700x700.png?text=Floral+Studs",
-    company: "Carlton London",
-    item_name: "Rhodium-Plated CZ Floral Studs",
-    original_price: 1045,
-    current_price: 606,
-    discount_percentage: 42,
-    delivery_date: "2023-10-09",
-  };
+  // const product = {
+  //   idName: "001",
+  //   image: "https://via.placeholder.com/700x700.png?text=Floral+Studs",
+  //   company: "Carlton London",
+  //   item_name: "Rhodium-Plated CZ Floral Studs",
+  //   original_price: 1045,
+  //   current_price: 606,
+  //   discount_percentage: 42,
+  //   delivery_date: "2023-10-09",
+  // };
 
   return (
     <div className="container-fluid min-vh-100 bg-light d-flex align-items-center justify-content-center py-5">
@@ -29,7 +49,7 @@ const ProductDetails = () => {
         {/* Left Side - Image */}
         <div className="col-lg-6 p-0">
           <img
-            src={product.image}
+            src={`/${product.image}`}
             alt={product.item_name}
             className="img-fluid w-100 h-100 object-fit-cover"
           />

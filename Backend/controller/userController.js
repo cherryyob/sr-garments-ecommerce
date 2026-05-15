@@ -8,7 +8,14 @@ exports.home = (req, res, next) => {
     res.send({ items });
   });
 };
-
+exports.getProductDetails = async (req, res, next) => {
+  const { id } = req.body;
+  const productDaatataById = await homeModel.findOne({ idName: id });
+  if (productDaatataById) {
+    console.log(productDaatataById, "this is receved");
+    res.status(200).json(productDaatataById);
+  }
+};
 exports.addToBag = (req, res, next) => {
   const { id } = req.body;
   console.log("idddd", id);
