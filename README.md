@@ -20,7 +20,7 @@ A modern, high-performance clothing store application. This project demonstrates
 
 ## 🚀 Key Features Under Development
 
-* **State-Driven Cart:** Real-time updates across the app using Redux slices.
+* **State-Driven Cart: Real-time updates across the app using Redux slices.
 * **Dynamic Product Grid:** Fetching and filtering garment data from the Express backend.
 * **Secure Auth:** Implementation of JWT-based authentication for user accounts.
 * **Responsive Layout:** Fully optimized for all screen sizes using Bootstrap's grid system.
@@ -31,4 +31,4 @@ A modern, high-performance clothing store application. This project demonstrates
 
 1. **Clone the repo**
    ```bash
-   git clone [https://github.com/your-username/sr-garments.git](https://github.com/your-username/sr-garments.git)
+   
