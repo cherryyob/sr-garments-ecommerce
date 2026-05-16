@@ -3,11 +3,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { productDetailsAction } from "../../store/productDetails";
+import SpinLoader from "../componant/SpinLoader";
+import {
+  handelAddToBagButton,
+  handelRemoveButton,
+} from "../../utility/helperFunctions";
 
 const ProductDetails = () => {
+  const bagItems = useSelector((store) => store.bagItemsState.bageItemId);
+
   const dispatch = useDispatch();
   const product = useSelector((store) => store.productDetailsData);
-  console.log(product, "product state");
 
   const { idName } = useParams();
   useEffect(() => {
@@ -22,9 +28,7 @@ const ProductDetails = () => {
       );
       if (idNameData.ok) {
         const data = await idNameData.json();
-        console.log(data, "befor dispatch ");
         dispatch(productDetailsAction(data));
-        console.log(product, "after dispatch ");
       } else {
         console.error("Failed to fetch product");
       }
@@ -42,6 +46,9 @@ const ProductDetails = () => {
   //   discount_percentage: 42,
   //   delivery_date: "2023-10-09",
   // };
+  if (product.idName !== idName) {
+    return <SpinLoader />;
+  }
 
   return (
     <div className="container-fluid min-vh-100 bg-light d-flex align-items-center justify-content-center py-5">
@@ -86,9 +93,25 @@ const ProductDetails = () => {
 
           {/* Buttons */}
           <div className="d-flex gap-3 mb-5 flex-wrap">
-            <button className="btn btn-danger btn-lg px-5 py-3">
-              Add to Cart
-            </button>
+            {bagItems.some((bi) => bi.bagId === idName) ? (
+              <button
+                className="btn btn-danger btn-lg px-5 py-3"
+                onClick={() => {
+                  handelRemoveButton(idName, dispatch);
+                }}
+              >
+                Remove
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  handelAddToBagButton(idName, dispatch);
+                }}
+                className="btn btn-success btn-lg px-5 py-3"
+              >
+                Add to Cart
+              </button>
+            )}
 
             <button className="btn btn-dark btn-lg px-5 py-3">Buy Now</button>
           </div>

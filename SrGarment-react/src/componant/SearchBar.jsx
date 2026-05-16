@@ -41,7 +41,7 @@ const SearchBar = () => {
   const handleSelect = (id) => {
     setQuery("");
     setShowDropdown(false);
-    navigate(`/product/${id}`); // Redirects to product detail page
+    navigate(`/itemDetails/${id}`); // Redirects to product detail page
   };
 
   return (
@@ -87,7 +87,7 @@ const SearchBar = () => {
               results.map((item) => (
                 <div
                   key={item.id}
-                  onClick={() => handleSelect(item.id)}
+                  onClick={() => handleSelect(item.idName)}
                   className="d-flex align-items-center p-3 border-bottom hover-result"
                   style={{ cursor: "pointer" }}
                 >

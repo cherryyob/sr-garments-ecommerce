@@ -1,35 +1,19 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addingToBag } from "../../store/bagItemSlice";
 import { MdAddShoppingCart } from "react-icons/md";
 import { FcDeleteDatabase } from "react-icons/fc";
 import { FaRegHeart } from "react-icons/fa";
-import { handelRemoveButton } from "../../store/bagItemSlice";
 import { Link } from "react-router-dom";
+import {
+  handelAddToBagButton,
+  handelRemoveButton,
+} from "../../utility/helperFunctions";
 
 const HomeItem = ({ item }) => {
   const bagItem = useSelector((store) => store.bagItemsState.bageItemId);
 
   const add = "Add To Bag";
   const dispatch = useDispatch();
-  const handelAddToBagButton = async () => {
-    console.log("bag Id:", bagItem);
-    try {
-      const response = await fetch("http://localhost:3000/bag", {
-        method: "post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: item.idName }),
-      });
-      if (!response.ok) {
-        throw new Error("FaildTo Add To Bag");
-      } else {
-        const updatedBagCount = await response.json();
-        dispatch(addingToBag(updatedBagCount));
-      }
-    } catch (err) {
-      console.log("errr may be already in your cart:", err);
-    }
-  };
 
   return (
     <>
@@ -87,7 +71,9 @@ const HomeItem = ({ item }) => {
             ) : (
               <button
                 type="button"
-                onClick={handelAddToBagButton}
+                onClick={() => {
+                  handelAddToBagButton(item.idName, dispatch);
+                }}
                 className="btn btn-success flex-grow-1 d-flex align-items-center justify-content-center gap-2 fw-bold"
               >
                 <MdAddShoppingCart /> Add To Bag

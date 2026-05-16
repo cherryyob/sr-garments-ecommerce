@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemFullDetails } from "../../store/bagItemSlice";
-import { handelRemoveButton } from "../../store/bagItemSlice";
+import { handelRemoveButton } from "../../utility/helperFunctions";
 const BagItem = () => {
   const dispatch = useDispatch();
   const items = useSelector((store) => store.bagItemsState.bagItemFullDetails);
