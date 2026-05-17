@@ -46,8 +46,12 @@ const SearchBar = () => {
 
   return (
     <div
-      className="position-relative"
-      style={{ width: "400px" }}
+      style={{
+        width: "100%",
+        maxWidth: "400px",
+      }}
+      className="position-relative w-100"
+      style={{ width: "420px", minWidth: "120px" }}
       ref={searchRef}
     >
       {/* Search Input */}
@@ -80,8 +84,8 @@ const SearchBar = () => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="position-absolute w-100 bg-white shadow-lg rounded-4 mt-2 overflow-hidden border"
-            style={{ zIndex: 1050 }}
+            className="position-absolute w-100 bg-white shadow-lg rounded-4 mt-2 border"
+            style={{ zIndex: 9999 }}
           >
             {results.length > 0 ? (
               results.map((item) => (
