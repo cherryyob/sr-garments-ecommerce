@@ -221,14 +221,18 @@ const Header = () => {
                   )}
                 </motion.div>
               </Link>
-
-              <IconButton
-                iconOutline={IoLogOutOutline}
-                iconFilled={IoLogOut}
-                label="Logout"
-                activeColor="#dc3545"
-                onClick={handleLogout}
-              />
+              <Link
+                to={"/SignupPage"}
+                className="text-decoration-none text-dark position-relative"
+              >
+                <IconButton
+                  iconOutline={IoLogOutOutline}
+                  iconFilled={IoLogOut}
+                  label="Logout"
+                  activeColor="#dc3545"
+                  onClick={handleLogout}
+                />
+              </Link>
             </div>
 
             {/* ================= MOBILE PROFILE ================= */}

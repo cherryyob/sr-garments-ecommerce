@@ -3,6 +3,7 @@ const path = require("path");
 const rootDir = require("./utils/pathUtil");
 const userRouter = require("./routes/userRouter");
 const hostRouter = require("./routes/hostRouter");
+const authRouter = require("./routes/authRouter");
 const app = express();
 app.use(express.static(path.join(rootDir, "public")));
 const cors = require("cors");
@@ -20,6 +21,7 @@ app.use(
 );
 app.use(express.urlencoded());
 app.use(userRouter);
+app.use(authRouter);
 app.use("/host", hostRouter);
 mongoose.connect(url).then((rsl) => {
   app.listen(port, () => {

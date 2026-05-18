@@ -11,6 +11,8 @@ import { Provider } from "react-redux";
 import Profile from "./routes/Profile.jsx";
 import WishList from "./routes/WishList.jsx";
 import ProductDetails from "./routes/ProductDetails.jsx";
+import SignupPage from "./routes/SignupPage.jsx";
+import LoginPage from "./routes/LogInPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +27,8 @@ const router = createBrowserRouter([
       { path: "/Profile", element: <Profile /> },
       { path: "/wishlist", element: <WishList /> },
       { path: "/itemDetails/:idName", element: <ProductDetails /> },
+      { path: "/SignupPage", element: <SignupPage /> },
+      { path: "/LoginPage", element: <LoginPage /> },
     ],
   },
 ]);
