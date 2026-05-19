@@ -222,7 +222,7 @@ const Header = () => {
                 </motion.div>
               </Link>
               <Link
-                to={"/SignupPage"}
+                to={"/LoginPage"}
                 className="text-decoration-none text-dark position-relative"
               >
                 <IconButton
