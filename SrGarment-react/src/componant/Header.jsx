@@ -14,11 +14,15 @@ import {
 
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import SearchBar from "./SearchBar";
+import { logout } from "../../store/authSlice";
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((store) => store.auth.isLoggedIn);
+
   const [isLeftOpen, setIsLeftOpen] = useState(false);
   const [isRightOpen, setIsRightOpen] = useState(false);
 
@@ -29,6 +33,12 @@ const Header = () => {
   const categories = ["Men", "Women", "Kids", "Home & Living", "Beauty"];
 
   const handleLogout = () => {
+    
+    localStorage.removeItem("token");
+    localStorage.removeItem("userlFind");
+    dispatch(logout());
+
+    dis;
     console.log("Logged out successfully");
   };
 
@@ -154,85 +164,111 @@ const Header = () => {
               </motion.div>
             </div>
             {/* ================= DESKTOP ACTIONS ================= */}
+
             <div className="col-auto d-none d-md-flex align-items-center gap-3">
-              <Link to="/profile" className="text-decoration-none text-dark">
-                <IconButton
-                  iconOutline={IoPersonOutline}
-                  iconFilled={IoPerson}
-                  label="Profile"
-                />
-              </Link>
-
-              <Link to="/wishlist" className="text-decoration-none text-dark">
-                <IconButton
-                  iconOutline={IoHeartOutline}
-                  iconFilled={IoHeart}
-                  label="Wishlist"
-                  activeColor="#ff3f6c"
-                />
-              </Link>
-
-              {/* BAG */}
-              <Link
-                to="/bag"
-                className="text-decoration-none text-dark position-relative"
-              >
-                <motion.div
-                  whileHover={{
-                    y: -3,
-                    scale: 1.05,
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                  className="d-flex flex-column align-items-center position-relative"
-                >
-                  <motion.div
-                    animate={{
-                      rotate: [0, 2, -2, 0],
-                    }}
-                    transition={{
-                      repeat: Infinity,
-                      duration: 4,
-                    }}
+              {isLoggedIn ? (
+                <div className="col-auto d-none d-md-flex align-items-center gap-3">
+                  <Link
+                    to="/profile"
+                    className="text-decoration-none text-dark"
                   >
-                    <IoBagHandleOutline size={23} />
-                  </motion.div>
+                    <IconButton
+                      iconOutline={IoPersonOutline}
+                      iconFilled={IoPerson}
+                      label="Profile"
+                    />
+                  </Link>
 
-                  <span
-                    className="fw-bold mt-1"
-                    style={{
-                      fontSize: "11px",
-                    }}
+                  <Link
+                    to="/wishlist"
+                    className="text-decoration-none text-dark"
                   >
-                    Bag
-                  </span>
+                    <IconButton
+                      iconOutline={IoHeartOutline}
+                      iconFilled={IoHeart}
+                      label="Wishlist"
+                      activeColor="#ff3f6c"
+                    />
+                  </Link>
 
-                  {bagCount > 0 && (
-                    <motion.span
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      whileHover={{ scale: 1.1 }}
-                      className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                      style={{
-                        fontSize: "10px",
+                  {/* BAG */}
+
+                  <Link
+                    to="/bag"
+                    className="text-decoration-none text-dark position-relative"
+                  >
+                    <motion.div
+                      whileHover={{
+                        y: -3,
+                        scale: 1.05,
                       }}
+                      whileTap={{ scale: 0.95 }}
+                      className="d-flex flex-column align-items-center position-relative"
                     >
-                      {bagCount}
-                    </motion.span>
-                  )}
-                </motion.div>
-              </Link>
-              <Link
-                to={"/LoginPage"}
-                className="text-decoration-none text-dark position-relative"
-              >
-                <IconButton
-                  iconOutline={IoLogOutOutline}
-                  iconFilled={IoLogOut}
-                  label="Logout"
-                  activeColor="#dc3545"
-                  onClick={handleLogout}
-                />
-              </Link>
+                      <motion.div
+                        animate={{
+                          rotate: [0, 2, -2, 0],
+                        }}
+                        transition={{
+                          repeat: Infinity,
+                          duration: 4,
+                        }}
+                      >
+                        <IoBagHandleOutline size={23} />
+                      </motion.div>
+
+                      <span
+                        className="fw-bold mt-1"
+                        style={{
+                          fontSize: "11px",
+                        }}
+                      >
+                        Bag
+                      </span>
+
+                      {bagCount > 0 && (
+                        <motion.span
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          whileHover={{ scale: 1.1 }}
+                          className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                          style={{
+                            fontSize: "10px",
+                          }}
+                        >
+                          {bagCount}
+                        </motion.span>
+                      )}
+                    </motion.div>
+                  </Link>
+
+                  <Link
+                    to={"/LoginPage"}
+                    className="text-decoration-none text-dark position-relative"
+                  >
+                    <IconButton
+                      iconOutline={IoLogOutOutline}
+                      iconFilled={IoLogOut}
+                      label="Logout"
+                      activeColor="#dc3545"
+                      onClick={handleLogout}
+                    />
+                  </Link>
+                </div>
+              ) : (
+                <Link
+                  to={"/LoginPage"}
+                  className="text-decoration-none text-dark position-relative"
+                >
+                  <IconButton
+                    iconOutline={IoLogOutOutline}
+                    iconFilled={IoLogOut}
+                    label="Login"
+                    activeColor="#dc3545"
+                    onClick={handleLogout}
+                  />
+                </Link>
+              )}
             </div>
 
             {/* ================= MOBILE PROFILE ================= */}

@@ -1,7 +1,11 @@
 import React, { useRef } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { login } from "../../store/authSlice";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   // Initializing refs to store the email and password values
   const emailRef = useRef("");
   const passwordRef = useRef("");
@@ -28,8 +32,16 @@ const LoginPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log("Login successful:", data);
         // Handle successful login here (e.g., save token, redirect)
+        if (data.status) {
+          console.log("Login successful:", data.sms);
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("userlFind", JSON.stringify(data.userlFind));
+          dispatch(login({ user: data.userlFind }));
+          navigate("/");
+        } else {
+          console.log("Login Unsuccessful:", data.sms);
+        }
       } else {
         console.error("Login failed:", data.sms || "Unknown error");
         // Handle server-side errors here
@@ -90,7 +102,10 @@ const LoginPage = () => {
           </button>
         </form>
         <Link to={"/SignupPage"}>
-          <button type="button" className="btn btn-dark btn-lg  w-100 fw-medium">
+          <button
+            type="button"
+            className="btn btn-dark btn-lg  w-100 fw-medium"
+          >
             SignUp
           </button>
         </Link>

@@ -1,5 +1,7 @@
 const { check, validationResult } = require("express-validator");
 const userModule = require("../models/user");
+const jwt = require("jsonwebtoken");
+const user = require("../models/user");
 exports.postSinghUp = [
   check("firstname")
     .trim()
@@ -66,6 +68,23 @@ exports.postSinghUp = [
 exports.getSinghUp = (req, res, next) => {
   res.send("singp pahge");
 };
-exports.postLogin = (req, res, next) => {
-  console.log(req.body);
+exports.postLogin = async (req, res, next) => {
+  const userlFind = await user.findOne({ email: req.body.email });
+  if (userlFind !== null && userlFind.email[0] === req.body.email) {
+    req.session.isLogedIn = true;
+    const token = jwt.sign(
+      {
+        userid: userlFind,
+        email: userlFind.email,
+      },
+      "this%%is g and i am ggok he 545656uye88789@#@#",
+      { expiresIn: "7d" },
+    );
+    res
+      .status(200)
+      .json({ status: true, sms: "succsesfully log in", token, userlFind });
+  } else {
+    req.session.isLogedIn = false;
+    res.status(200).json({ status: false, sms: "check your email" });
+  }
 };
