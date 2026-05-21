@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import SearchBar from "./SearchBar";
 import { logout } from "../../store/authSlice";
+import { logoutService } from "../services/authService";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -32,13 +33,13 @@ const Header = () => {
 
   const categories = ["Men", "Women", "Kids", "Home & Living", "Beauty"];
 
-  const handleLogout = () => {
-    
+  const handleLogout = async () => {
+    await logoutService();
     localStorage.removeItem("token");
     localStorage.removeItem("userlFind");
     dispatch(logout());
 
-    dis;
+    
     console.log("Logged out successfully");
   };
 

@@ -65,13 +65,33 @@ exports.postSinghUp = [
     }
   },
 ];
-exports.getSinghUp = (req, res, next) => {
-  res.send("singp pahge");
+exports.postLogout = (req, res, next) => {
+  console.log(req.session, "hjkhjk");
+  req.session.destroy((err) => {
+    req.session.isLogedIn = false;
+    console.log(req.session, "hjkhjk");
+    if (err) {
+      return res.status(500).json({
+        message: "Logout failed",
+      });
+    }
+
+    res.clearCookie("connect.sid");
+
+    res.status(200).json({
+      message: "Logout done",
+    });
+  });
 };
 exports.postLogin = async (req, res, next) => {
   const userlFind = await user.findOne({ email: req.body.email });
   if (userlFind !== null && userlFind.email[0] === req.body.email) {
     req.session.isLogedIn = true;
+    req.session.save((err) => {
+      if (err) {
+        console.log("error while session sving ", err);
+      }
+    });
     const token = jwt.sign(
       {
         userid: userlFind,
