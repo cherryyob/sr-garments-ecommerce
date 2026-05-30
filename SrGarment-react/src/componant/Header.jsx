@@ -35,11 +35,10 @@ const Header = () => {
 
   const handleLogout = async () => {
     await logoutService();
-    localStorage.removeItem("token");
+
     localStorage.removeItem("userlFind");
     dispatch(logout());
 
-    
     console.log("Logged out successfully");
   };
 

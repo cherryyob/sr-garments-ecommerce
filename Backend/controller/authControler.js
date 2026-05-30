@@ -68,7 +68,6 @@ exports.postSinghUp = [
 exports.postLogout = (req, res, next) => {
   console.log(req.session, "hjkhjk");
   req.session.destroy((err) => {
-    req.session.isLogedIn = false;
     console.log(req.session, "hjkhjk");
     if (err) {
       return res.status(500).json({
@@ -92,17 +91,10 @@ exports.postLogin = async (req, res, next) => {
         console.log("error while session sving ", err);
       }
     });
-    const token = jwt.sign(
-      {
-        userid: userlFind,
-        email: userlFind.email,
-      },
-      "this%%is g and i am ggok he 545656uye88789@#@#",
-      { expiresIn: "7d" },
-    );
+
     res
       .status(200)
-      .json({ status: true, sms: "succsesfully log in", token, userlFind });
+      .json({ status: true, sms: "succsesfully log in", userlFind });
   } else {
     req.session.isLogedIn = false;
     res.status(200).json({ status: false, sms: "check your email" });

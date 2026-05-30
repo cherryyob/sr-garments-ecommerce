@@ -26,6 +26,7 @@ const LoginPage = () => {
         headers: {
           "Content-Type": "application/json", // Tells backend we are sending JSON
         },
+        credentials: "include",
         body: JSON.stringify(loginData), // Converts JS object to JSON string
       });
 
@@ -35,7 +36,7 @@ const LoginPage = () => {
         // Handle successful login here (e.g., save token, redirect)
         if (data.status) {
           console.log("Login successful:", data.sms);
-          localStorage.setItem("token", data.token);
+
           localStorage.setItem("userlFind", JSON.stringify(data.userlFind));
           dispatch(login({ user: data.userlFind }));
           navigate("/");
