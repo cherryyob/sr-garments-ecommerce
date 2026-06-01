@@ -1,4 +1,5 @@
 const { check, validationResult } = require("express-validator");
+const bcrypt = require("bcryptjs");
 const userModule = require("../models/user");
 const jwt = require("jsonwebtoken");
 const user = require("../models/user");
@@ -47,17 +48,21 @@ exports.postSinghUp = [
     } else {
       const { role, password, email, lastname, firstname } = req.body;
 
-      const userData = new userModule({
-        role,
-        password,
-        email,
-        lastname,
-      })
-        .save()
-        .then(() => {
-          req.session.isLogedIn = false;
-          console.log(email);
-          res.status(200).json({ err: "data saved in backend" });
+      bcrypt
+        .hash(password, 12)
+        .then((hashPassword) => {
+          const userData = new userModule({
+            role,
+            password: hashPassword,
+            email,
+            lastname,
+          })
+            .save()
+            .then(() => {
+              req.session.isLogedIn = false;
+              console.log(email);
+              res.status(200).json({ err: "data saved in backend" });
+            });
         })
         .catch((err) => {
           res.status(200).json({ err: err.message });
@@ -83,20 +88,29 @@ exports.postLogout = (req, res, next) => {
   });
 };
 exports.postLogin = async (req, res, next) => {
-  const userlFind = await user.findOne({ email: req.body.email });
-  if (userlFind !== null && userlFind.email[0] === req.body.email) {
-    req.session.isLogedIn = true;
-    req.session.save((err) => {
-      if (err) {
-        console.log("error while session sving ", err);
-      }
-    });
+  const { email, password } = req.body;
+  const userlFind = await user.findOne({ email: email });
 
-    res
-      .status(200)
-      .json({ status: true, sms: "succsesfully log in", userlFind });
+  const userDetailForFrontend = {};
+  if (userlFind !== null && userlFind.email[0] === req.body.email) {
+    const isMatch = await bcrypt.compare(password, userlFind.password);
+
+    if (isMatch) {
+      console.log(userlFind, "finduushsgdjs");
+      req.session.isLogedIn = true;
+      req.session.save((err) => {
+        if (err) {
+          console.log("error while session sving ", err);
+        }
+        return res.status(200).json({ status: true, sms: "Login Done" });
+      });
+    } else {
+      return res
+        .status(404)
+        .json({ status: false, sms: "check login details" });
+    }
   } else {
     req.session.isLogedIn = false;
-    res.status(200).json({ status: false, sms: "check your email" });
+    res.status(404).json({ status: false, sms: "check your email" });
   }
 };

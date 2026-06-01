@@ -14,3 +14,22 @@ export const logoutService = async () => {
     console.log("logout error", err.message);
   }
 };
+export const loginServices = async (loginData) => {
+  try {
+    //  Send data to the backend using fetch
+    const response = await fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Tells backend we are sending JSON
+      },
+      credentials: "include",
+      body: JSON.stringify(loginData), // Converts JS object to JSON string
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Network error:", error);
+    // Handle connection/network errors here
+  }
+};

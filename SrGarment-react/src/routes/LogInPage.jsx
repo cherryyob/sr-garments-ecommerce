@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../store/authSlice";
+import { loginServices } from "../services/authService";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -20,32 +21,19 @@ const LoginPage = () => {
     };
 
     try {
-      // 2. Send data to the backend using fetch
-      const response = await fetch("http://localhost:3000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", // Tells backend we are sending JSON
-        },
-        credentials: "include",
-        body: JSON.stringify(loginData), // Converts JS object to JSON string
-      });
+      const data = await loginServices(loginData);
 
-      const data = await response.json();
+      // Handle successful login here (e.g., save token, redirect)
+      console.log(data);
+      if (data.status) {
+        console.log("Login successful:", data.sms);
 
-      if (response.ok) {
-        // Handle successful login here (e.g., save token, redirect)
-        if (data.status) {
-          console.log("Login successful:", data.sms);
-
-          localStorage.setItem("userlFind", JSON.stringify(data.userlFind));
-          dispatch(login({ user: data.userlFind }));
-          navigate("/");
-        } else {
-          console.log("Login Unsuccessful:", data.sms);
-        }
+        localStorage.setItem("userlFind", JSON.stringify(data.userlFind));
+        dispatch(login({ user: data.userlFind }));
+        navigate("/");
       } else {
-        console.error("Login failed:", data.sms || "Unknown error");
-        // Handle server-side errors here
+        alert(data.sms);
+        console.log("Login Unsuccessful:", data.sms);
       }
     } catch (error) {
       console.error("Network error:", error);
