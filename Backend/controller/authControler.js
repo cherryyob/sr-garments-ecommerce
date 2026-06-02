@@ -47,11 +47,13 @@ exports.postSinghUp = [
       return res.status(200).json({ err: error.array()[0].msg });
     } else {
       const { role, password, email, lastname, firstname } = req.body;
+      console.log(req.body, "and error is :", error);
 
       bcrypt
         .hash(password, 12)
         .then((hashPassword) => {
           const userData = new userModule({
+            firstname,
             role,
             password: hashPassword,
             email,
@@ -92,12 +94,18 @@ exports.postLogin = async (req, res, next) => {
   const userlFind = await user.findOne({ email: email });
 
   const userDetailForFrontend = {};
-  if (userlFind !== null && userlFind.email[0] === req.body.email) {
+  if (userlFind !== null && userlFind.email === req.body.email) {
     const isMatch = await bcrypt.compare(password, userlFind.password);
 
     if (isMatch) {
       console.log(userlFind, "finduushsgdjs");
       req.session.isLogedIn = true;
+      req.session.user = {
+        id: userlFind._id.toString(),
+        email: userlFind.email,
+        name: userlFind.name,
+      };
+
       req.session.save((err) => {
         if (err) {
           console.log("error while session sving ", err);

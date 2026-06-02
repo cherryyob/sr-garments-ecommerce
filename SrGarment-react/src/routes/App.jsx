@@ -12,11 +12,18 @@ function App() {
 
   return (
     <>
-      <Header />
       <FetchBagItem />
       <FatchingItems />
 
-      {fatchingStatus.currantlyFatching ? <SpinLoader /> : <Outlet />}
+      {fatchingStatus.currantlyFatching ? (
+        <SpinLoader />
+      ) : (
+        <>
+          {" "}
+          <Header />
+          <Outlet />
+        </>
+      )}
 
       <Footer />
     </>

@@ -23,6 +23,7 @@ import { logoutService } from "../services/authService";
 const Header = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((store) => store.auth.isLoggedIn);
+  console.log(isLoggedIn, "is loged in header");
 
   const [isLeftOpen, setIsLeftOpen] = useState(false);
   const [isRightOpen, setIsRightOpen] = useState(false);

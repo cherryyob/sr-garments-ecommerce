@@ -7,6 +7,7 @@ import {
   fatchingOnWay,
   fatchingFinished,
 } from "../../store/fatchingStatushSlice";
+import { login } from "../../store/authSlice";
 
 const FatchingItems = () => {
   const dispatch = useDispatch();
@@ -20,10 +21,15 @@ const FatchingItems = () => {
 
     dispatch(fatchingOnWay());
 
-    fetch("http://localhost:3000/items", { signal })
+    fetch("http://localhost:3000/items", { signal, credentials: "include" })
       .then((res) => res.json())
-      .then(({ items }) => {
+      .then(({ items, isLogin, user }) => {
+        console.log(isLogin, "is login in fatch");
         dispatch(markFatchDone());
+        if (isLogin) {
+          dispatch(login({ user: user }));
+        }
+
         dispatch(addInitialItems(items));
         dispatch(fatchingFinished());
       });

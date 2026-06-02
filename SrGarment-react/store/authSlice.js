@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-  isLoggedIn: !!localStorage.getItem("token"),
+  isLoggedIn: false,
   user: JSON.parse(localStorage.getItem("user")) || null,
 };
 

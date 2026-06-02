@@ -5,7 +5,12 @@ const homeModel = require("../models/homes");
 exports.home = (req, res, next) => {
   homeModel.find().then((row) => {
     const items = row;
-    res.send({ items });
+    console.log(req.session, "this is session in home");
+    res.send({
+      items,
+      user: req.session.user,
+      isLogin: req.session.isLogedIn || false,
+    });
   });
 };
 exports.getProductDetails = async (req, res, next) => {

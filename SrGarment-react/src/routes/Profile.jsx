@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSelector } from "react-redux";
 import {
   IoSettingsOutline,
   IoLogOutOutline,
@@ -12,6 +13,8 @@ import {
 } from "react-icons/io5";
 
 const ProfilePage = () => {
+  const user = useSelector((state) => state.auth.user);
+  console.log("Logged in user:", user);
   const [activeTab, setActiveTab] = useState("Orders");
 
   const menuItems = [
@@ -63,8 +66,12 @@ const ProfilePage = () => {
                 backgroundColor: "#fff1f4",
               }}
             />
-            <h5 className="fw-bold mb-0">SR User</h5>
-            <p className="text-muted small">sruser@example.com</p>
+            <h5 className="fw-bold mb-0">
+              {user?.firstname} {user?.lastname}
+            </h5>
+            <p className="text-muted small">
+              {user?.email || "sruser@example.com"}
+            </p>
           </div>
 
           <nav className="nav flex-column gap-2">
