@@ -5,6 +5,7 @@ export const handelAddToBagButton = async (id, dispatch) => {
     const response = await fetch("http://localhost:3000/bag", {
       method: "post",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ id: id }),
     });
     if (!response.ok) {
@@ -21,6 +22,7 @@ export const handelRemoveButton = async (id, dispatch) => {
   const response = await fetch("http://localhost:3000/removeItemById", {
     method: "post",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ id }),
   });
   const updatedBagCount = await response.json();

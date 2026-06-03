@@ -1,6 +1,8 @@
 const { json } = require("body-parser");
 const bagModel = require("../models/bag");
 const homeModel = require("../models/homes");
+const userModel = require("../models/user");
+const mongoose = require("mongoose");
 
 exports.home = (req, res, next) => {
   homeModel.find().then((row) => {
@@ -21,8 +23,22 @@ exports.getProductDetails = async (req, res, next) => {
     res.status(200).json(productDaatataById);
   }
 };
-exports.addToBag = (req, res, next) => {
+exports.addToBag = async (req, res, next) => {
+  const userId = req.session.user.id;
   const { id } = req.body;
+  const objectUser = new mongoose.Types.ObjectId(userId);
+
+  console.log("object id : ", id);
+  console.log("object user : ", userId, "and ,", objectUser);
+
+  const userDocument = await userModel.findByIdAndUpdate(
+    { _id: objectUser },
+    {
+      $addToSet: { userData: { cart: id } },
+      new: true,
+    },
+  );
+
   console.log("idddd", id);
   const bag = new bagModel({ bagId: id });
   bag
