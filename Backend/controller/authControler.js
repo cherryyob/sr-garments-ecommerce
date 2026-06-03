@@ -98,19 +98,28 @@ exports.postLogin = async (req, res, next) => {
     const isMatch = await bcrypt.compare(password, userlFind.password);
 
     if (isMatch) {
-      console.log(userlFind, "finduushsgdjs");
       req.session.isLogedIn = true;
       req.session.user = {
         id: userlFind._id.toString(),
         email: userlFind.email,
-        name: userlFind.name,
+        firstname: userlFind.firstname,
+        lastname: userlFind.lastname,
       };
 
       req.session.save((err) => {
         if (err) {
           console.log("error while session sving ", err);
         }
-        return res.status(200).json({ status: true, sms: "Login Done" });
+        return res.status(200).json({
+          status: true,
+          sms: "Login Done",
+          user: {
+            id: userlFind._id.toString(),
+            email: userlFind.email,
+            firstname: userlFind.firstname,
+            lastname: userlFind.lastname,
+          },
+        });
       });
     } else {
       return res

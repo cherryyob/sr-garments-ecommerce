@@ -14,7 +14,7 @@ import {
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.auth.user);
-  console.log("Logged in user:", user);
+  
   const [activeTab, setActiveTab] = useState("Orders");
 
   const menuItems = [

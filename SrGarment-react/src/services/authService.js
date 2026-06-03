@@ -5,6 +5,7 @@ export const logoutService = async () => {
       credentials: "include",
     });
     const data = await res.json();
+    console.log(data, "datatat");
     if (!res.ok) {
       throw new Error("logout unsucsessfull:", data.message);
     }

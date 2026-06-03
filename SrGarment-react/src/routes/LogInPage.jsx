@@ -24,7 +24,7 @@ const LoginPage = () => {
       const data = await loginServices(loginData);
 
       // Handle successful login here (e.g., save token, redirect)
-      console.log(data);
+      console.log(data, "data in login");
       if (data.status) {
         console.log("Login successful:", data.sms);
 
