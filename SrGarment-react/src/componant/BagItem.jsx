@@ -9,10 +9,14 @@ const BagItem = () => {
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    fetch("http://localhost:3000/bag", { signal })
+    fetch("http://localhost:3000/bag", { credentials: "include", signal })
       .then((data) => data.json())
       .then((bagData) => {
-        fetch("http://localhost:3000/bagItemFindInItems", { signal })
+        
+        fetch("http://localhost:3000/bagItemFindInItems", {
+          credentials: "include",
+          signal,
+        })
           .then((data) => data.json())
           .then((cartFullData) => {
             dispatch(addItemFullDetails(cartFullData));

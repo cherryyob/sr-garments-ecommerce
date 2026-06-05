@@ -11,6 +11,7 @@ import {
 
 const HomeItem = ({ item }) => {
   const bagItem = useSelector((store) => store.bagItemsState.bageItemId);
+  console.log("bagItem", bagItem, "item", item);
 
   const add = "Add To Bag";
   const dispatch = useDispatch();
@@ -60,7 +61,7 @@ const HomeItem = ({ item }) => {
           </div>
 
           <div className="d-flex w-100 gap-2">
-            {bagItem.some((bi) => bi.bagId === item.idName) ? (
+            {bagItem.includes(item.idName) ? (
               <button
                 type="button"
                 className="btn btn-danger flex-grow-1 d-flex align-items-center justify-content-center gap-2 fw-bold"

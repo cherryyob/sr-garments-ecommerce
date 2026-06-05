@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 exports.home = (req, res, next) => {
   homeModel.find().then((row) => {
     const items = row;
-    console.log(req.session, "this is session in home");
+
     res.send({
       items,
       user: req.session.user,
@@ -19,7 +19,6 @@ exports.getProductDetails = async (req, res, next) => {
   const { id } = req.body;
   const productDaatataById = await homeModel.findOne({ idName: id });
   if (productDaatataById) {
-    console.log(productDaatataById, "this is receved");
     res.status(200).json(productDaatataById);
   }
 };
@@ -27,9 +26,6 @@ exports.addToBag = async (req, res, next) => {
   const userId = req.session.user.id;
   const { id } = req.body;
   const objectUser = new mongoose.Types.ObjectId(userId);
-
-  console.log("object id : ", id);
-  console.log("object user : ", userId, "and ,", objectUser);
 
   const userDocument = await userModel.findByIdAndUpdate(
     { _id: objectUser },
@@ -39,13 +35,11 @@ exports.addToBag = async (req, res, next) => {
     },
   );
 
-  console.log("idddd", id);
   const bag = new bagModel({ bagId: id });
   bag
     .save()
     .then(() => {
       bagModel.find().then((data) => {
-        console.log("rsl : ", data);
         res.status(200).json(data);
       });
     })
@@ -53,30 +47,48 @@ exports.addToBag = async (req, res, next) => {
       console.log("error while saving in bag module : ", err);
     });
 };
-exports.getBag = (req, res, next) => {
-  bagModel.find().then((data) => {
-    res.status(200).json(data);
-  });
+exports.getBag = async (req, res, next) => {
+  const userId = req.session.user?.id || null;
+
+  if (userId) {
+    const mongooseId = new mongoose.Types.ObjectId(userId);
+    const userDetails = await userModel.findById(mongooseId, "userData.cart");
+    const cartValue = userDetails.userData?.cart;
+
+    return res.status(200).json(cartValue);
+  }
+  return res.status(200);
 };
 exports.removeItemById = async (req, res, next) => {
-  const { id } = req.body;
-  await bagModel.deleteOne({ bagId: id });
-  bagModel.find().then((allData) => {
-    res.status(200).json(allData);
-  });
+  const userId = req.session.user?.id || null;
+  const monguseId = new mongoose.Types.ObjectId(userId);
+  const updatedUser = await userModel.findOneAndUpdate(
+    { _id: convertToObjectId(userId) },
+    { $pull: { userData: { cart: req.body.id } } },
+    { new: true },
+  );
+  console.log("updatedUser", updatedUser);
+  res.status(200).json(updatedUser.userData);
 };
-exports.bagItemFindInItems = (req, res, next) => {
-  homeModel.find().then((items) => {
-    bagModel.find().then((bagItem) => {
-      const cartFulData = bagItem.map((bagSingleId) => {
-        return items.find(
-          (singleItem) => singleItem.idName === bagSingleId.bagId,
-        );
+exports.bagItemFindInItems = async (req, res, next) => {
+  const userCartData = await userModel.findById(
+    req.session.user.id,
+    "userData.cart",
+  );
+  const cartValue = userCartData.userData?.cart || [];
+  const objectCartValue = await homeModel.find({ idName: { $in: cartValue } });
 
-        console.log(cartFulData, " :bagData");
-      });
-      res.status(200).json(cartFulData);
-      console.log(bagItem, "bag item");
-    });
-  });
+  if (objectCartValue) {
+    res.status(200).json(objectCartValue);
+  } else {
+    res.status(200).json({ err: "looks cart is empty" });
+  }
+};
+const convertToObjectId = (id) => {
+  try {
+    return new mongoose.Types.ObjectId(id);
+  } catch (error) {
+    console.error("Invalid ID format:", error);
+    return null;
+  }
 };

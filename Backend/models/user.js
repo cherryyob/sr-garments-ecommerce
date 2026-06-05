@@ -18,7 +18,7 @@ const userModel = mongoose.Schema({
   lastname: { type: String, require: [true, "Last name must needed"] },
   firstname: { type: String, require: [true, "Enter a valid name"] },
   userData: {
-    cart: { type: String },
+    cart: { type: String ,unique: true },
   },
 });
 module.exports = mongoose.model("userModel", userModel);

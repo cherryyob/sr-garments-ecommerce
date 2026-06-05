@@ -73,9 +73,7 @@ exports.postSinghUp = [
   },
 ];
 exports.postLogout = (req, res, next) => {
-  console.log(req.session, "hjkhjk");
   req.session.destroy((err) => {
-    console.log(req.session, "hjkhjk");
     if (err) {
       return res.status(500).json({
         message: "Logout failed",
