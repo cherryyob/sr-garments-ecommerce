@@ -33,21 +33,13 @@ export const handelAddToBagButton = async (id, dispatch) => {
   }
 };
 export const handelRemoveButton = async (id, dispatch) => {
-  if (!userFromStorge) {
-    alert("Please login to add items to your bag.");
-
-    window.location.href = "/LoginPage";
-
-    return;
-  } else {
-    const response = await fetch("http://localhost:3000/removeItemById", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify({ id }),
-    });
-    const updatedBagCount = await response.json();
-    dispatch(addingToBag(updatedBagCount));
-    dispatch(removeFromFullDetails(id));
-  }
+  const response = await fetch("http://localhost:3000/removeItemById", {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ id }),
+  });
+  const updatedBagCount = await response.json();
+  dispatch(addingToBag(updatedBagCount));
+  dispatch(removeFromFullDetails(id));
 };
