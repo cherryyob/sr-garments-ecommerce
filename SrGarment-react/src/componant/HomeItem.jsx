@@ -10,6 +10,8 @@ import {
 } from "../../utility/helperFunctions";
 
 const HomeItem = ({ item }) => {
+  
+   // Accessing the bag items from the Redux store to determine if the current item is in the bag
   const bagItem = useSelector((store) => store.bagItemsState.bageItemId);
   console.log("bagItem", bagItem, "item", item);
 

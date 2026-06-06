@@ -26,10 +26,10 @@ const LoginPage = () => {
       // Handle successful login here (e.g., save token, redirect)
       console.log(data, "data in login");
       if (data.status) {
-        console.log("Login successful:", data.sms);
+        console.log("Login successful:", data);
 
-        localStorage.setItem("userlFind", JSON.stringify(data.userlFind));
-        dispatch(login({ user: data.userlFind }));
+        localStorage.setItem("userlFind", JSON.stringify(data.user));
+        dispatch(login({ user: data.user }));
         navigate("/");
       } else {
         alert(data.sms);

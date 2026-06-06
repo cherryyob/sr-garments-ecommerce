@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { login } from "../../store/authSlice";
 import {
   IoPersonOutline,
   IoPerson,
@@ -19,21 +20,38 @@ import { useDispatch, useSelector } from "react-redux";
 import SearchBar from "./SearchBar";
 import { logout } from "../../store/authSlice";
 import { logoutService } from "../services/authService";
+import { useEffect } from "react";
 
 const Header = () => {
+  // Check localStorage for user data on component mount
+  const userFromStorge =
+    localStorage.getItem("userlFind") &&
+    localStorage.getItem("userlFind") !== "undefined"
+      ? JSON.parse(localStorage.getItem("userlFind"))
+      : null;
+
+  console.log("userFromStorge", userFromStorge);
+
   const dispatch = useDispatch();
+  // Get authentication state from Redux store
   const isLoggedIn = useSelector((store) => store.auth.isLoggedIn);
   console.log(isLoggedIn, "is loged in header");
-
+  // If user data exists in localStorage, update Redux store
+  useEffect(() => {
+    if (userFromStorge) {
+      dispatch(login({ user: userFromStorge }));
+    }
+  }, [dispatch, userFromStorge]);
+  // State for controlling sidebar visibility
   const [isLeftOpen, setIsLeftOpen] = useState(false);
   const [isRightOpen, setIsRightOpen] = useState(false);
-
+  // Get bag item count from Redux store
   const bagCount = useSelector(
     (store) => store.bagItemsState.bageItemId.length || 0,
   );
 
   const categories = ["Men", "Women", "Kids", "Home & Living", "Beauty"];
-
+  // Handle user logout
   const handleLogout = async () => {
     await logoutService();
 
