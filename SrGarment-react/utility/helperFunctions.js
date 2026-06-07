@@ -1,32 +1,20 @@
 import { addingToBag, removeFromFullDetails } from "../store/bagItemSlice";
 
-const userFromStorge =
-  localStorage.getItem("userlFind") &&
-  localStorage.getItem("userlFind") !== "undefined"
-    ? JSON.parse(localStorage.getItem("userlFind"))
-    : null;
-
 export const handelAddToBagButton = async (id, dispatch) => {
+  console.log("id in helper function", id);
   try {
-    if (!userFromStorge) {
-      alert("Please login to add items to your bag.");
-
-      window.location.href = "/LoginPage";
-
-      return;
+    const response = await fetch("http://localhost:3000/bag", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ id: id }),
+    });
+    if (!response.ok) {
+      throw new Error("FaildTo Add To Bag");
     } else {
-      const response = await fetch("http://localhost:3000/bag", {
-        method: "post",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ id: id }),
-      });
-      if (!response.ok) {
-        throw new Error("FaildTo Add To Bag");
-      } else {
-        const updatedBagCount = await response.json();
-        dispatch(addingToBag(updatedBagCount));
-      }
+      const updatedBagCount = await response.json();
+      console.log("updatedBagCount", updatedBagCount);
+      dispatch(addingToBag(updatedBagCount));
     }
   } catch (err) {
     console.log("errr may be already in your cart:", err);

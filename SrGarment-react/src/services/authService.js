@@ -34,3 +34,20 @@ export const loginServices = async (loginData) => {
     // Handle connection/network errors here
   }
 };
+export const saveAddress = async (addressData) => {
+  console.log("Received address data:", addressData);
+  try {
+    //  Send data to the backend using fetch
+    const response = await fetch("http://localhost:3000/userAddress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(addressData),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Network error:", error);
+    // Handle connection/network errors here
+  }
+};

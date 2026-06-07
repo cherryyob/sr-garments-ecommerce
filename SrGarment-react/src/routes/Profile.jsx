@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { saveAddress } from "../services/authService.js";
 import { useSelector } from "react-redux";
 import {
   IoSettingsOutline,
@@ -12,9 +13,230 @@ import {
   IoBagCheckOutline,
 } from "react-icons/io5";
 
+// ==========================================
+// SMART ADDRESS SECTION COMPONENT
+// ==========================================
+const SmartAddressSection = () => {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    pincode: "",
+    streetAddress: "",
+    areaAddress: "",
+    city: "",
+    state: "",
+    landmark: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [pincodeError, setPincodeError] = useState("");
+  const [validated, setValidated] = useState(false);
+
+  // Auto-fetch data on pincode match
+  const handleChange = async (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+
+    if (id === "pincode") {
+      if (value.length === 6 && /^[1-9][0-9]{5}$/.test(value)) {
+        setLoading(true);
+        setPincodeError("");
+        try {
+          const res = await fetch(
+            `https://api.postalpincode.in/pincode/${value}`,
+          );
+          const data = await res.json();
+          if (data[0].Status === "Success") {
+            const details = data[0].PostOffice[0];
+            setFormData((prev) => ({
+              ...prev,
+              city: details.District,
+              state: details.State,
+            }));
+          } else {
+            throw new Error();
+          }
+        } catch {
+          setPincodeError("Invalid Pincode. Please check and try again.");
+          setFormData((prev) => ({ ...prev, city: "", state: "" }));
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setFormData((prev) => ({ ...prev, city: "", state: "" }));
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (e.currentTarget.checkValidity() === false || pincodeError) {
+      e.stopPropagation();
+    } else {
+      const savedResult = await saveAddress(formData);
+      alert("Address received successfully!");
+    }
+    setValidated(true);
+  };
+
+  return (
+    <div className="text-start">
+      <h4 className="fw-bold mb-1 text-dark fs-5">Add New Address</h4>
+      <p className="text-muted small mb-4">
+        Enter your pincode to automatically pull city and state info.
+      </p>
+
+      <form
+        className={`needs-validation ${validated ? "was-validated" : ""}`}
+        noValidate
+        onSubmit={handleSubmit}
+      >
+        <div className="row g-3">
+          {/* Full Name */}
+          <div className="col-12">
+            <label className="form-label small fw-semibold text-secondary mb-1">
+              Full Name
+            </label>
+            <input
+              type="text"
+              id="fullName"
+              className="form-control smart-input py-2"
+              placeholder="e.g. Raghav Jha"
+              value={formData.fullName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          {/* Pincode */}
+          <div className="col-12 position-relative">
+            <label className="form-label small fw-semibold text-secondary mb-1">
+              Pincode (ZIP)
+            </label>
+            <input
+              type="text"
+              id="pincode"
+              className="form-control smart-input py-2"
+              placeholder="Enter 6-digit pincode"
+              maxLength="6"
+              pattern="^[1-9][0-9]{5}$"
+              value={formData.pincode}
+              onChange={handleChange}
+              required
+            />
+            {loading && (
+              <div
+                className="spinner-border spinner-border-sm text-danger position-absolute"
+                style={{ right: "15px", top: "38px" }}
+                role="status"
+              />
+            )}
+            {pincodeError && (
+              <div className="text-danger small mt-1">{pincodeError}</div>
+            )}
+            <div className="invalid-feedback">
+              Please enter a valid 6-digit postal code.
+            </div>
+          </div>
+
+          {/* Street Address */}
+          <div className="col-12">
+            <label className="form-label small fw-semibold text-secondary mb-1">
+              Flat, House no., Building, Apartment
+            </label>
+            <input
+              type="text"
+              id="streetAddress"
+              className="form-control smart-input py-2"
+              placeholder="Floor, Flat/House No., Building Name"
+              value={formData.streetAddress}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          {/* Area Address */}
+          <div className="col-12">
+            <label className="form-label small fw-semibold text-secondary mb-1">
+              Area, Colony, Street, Sector
+            </label>
+            <input
+              type="text"
+              id="areaAddress"
+              className="form-control smart-input py-2"
+              placeholder="Area details"
+              value={formData.areaAddress}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          {/* City (Auto-filled) */}
+          <div className="col-md-6">
+            <label className="form-label small fw-semibold text-secondary mb-1">
+              City / District
+            </label>
+            <input
+              type="text"
+              id="city"
+              className="form-control smart-input py-2 bg-light"
+              placeholder="Auto-filled"
+              value={formData.city}
+              readOnly
+              required
+            />
+          </div>
+
+          {/* State (Auto-filled) */}
+          <div className="col-md-6">
+            <label className="form-label small fw-semibold text-secondary mb-1">
+              State
+            </label>
+            <input
+              type="text"
+              id="state"
+              className="form-control smart-input py-2 bg-light"
+              placeholder="Auto-filled"
+              value={formData.state}
+              readOnly
+              required
+            />
+          </div>
+
+          {/* Landmark */}
+          <div className="col-12">
+            <label className="form-label small fw-semibold text-secondary mb-1">
+              Landmark{" "}
+              <span className="text-muted font-monospace text-lowercase">
+                (Optional)
+              </span>
+            </label>
+            <input
+              type="text"
+              id="landmark"
+              className="form-control smart-input py-2"
+              placeholder="e.g. Near Apollo Hospital"
+              value={formData.landmark}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          className="btn btn-danger w-100 mt-4 py-2.5 fw-semibold rounded-3 shadow-sm"
+        >
+          Save Address
+        </button>
+      </form>
+    </div>
+  );
+};
+
+// ==========================================
+// MAIN PROFILE PAGE MODULE
+// ==========================================
 const ProfilePage = () => {
   const user = useSelector((state) => state.auth.user);
-  
   const [activeTab, setActiveTab] = useState("Orders");
 
   const menuItems = [
@@ -53,7 +275,7 @@ const ProfilePage = () => {
   return (
     <div className="container-fluid min-vh-100 bg-light p-0">
       <div className="row g-0 min-vh-100">
-        {/* LEFT SIDE: Navigation Sidebar (4 Columns) */}
+        {/* LEFT SIDE: Navigation Sidebar */}
         <div className="col-lg-3 col-md-4 bg-white border-end p-4 shadow-sm">
           <div className="profile-header text-center mb-5">
             <motion.img
@@ -109,8 +331,8 @@ const ProfilePage = () => {
           </nav>
         </div>
 
-        {/* RIGHT SIDE: Details View (9 Columns) */}
-        <div className="col-lg-9 col-md-8 p-5">
+        {/* RIGHT SIDE: Details View */}
+        <div className="col-lg-9 col-md-8 p-4 p-md-5">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -133,7 +355,7 @@ const ProfilePage = () => {
                 className="card border-0 shadow-sm rounded-5 p-4 bg-white"
                 style={{ minHeight: "60vh" }}
               >
-                {activeTab === "Orders" ? (
+                {activeTab === "Orders" && (
                   <div className="text-center py-5">
                     <IoBagCheckOutline size={80} className="text-light mb-3" />
                     <h4 className="text-muted">No Recent Orders</h4>
@@ -144,7 +366,11 @@ const ProfilePage = () => {
                       Continue Shopping
                     </button>
                   </div>
-                ) : (
+                )}
+
+                {activeTab === "Addresses" && <SmartAddressSection />}
+
+                {!["Orders", "Addresses"].includes(activeTab) && (
                   <div className="p-4 text-center">
                     <h5 className="text-muted">
                       Details for {activeTab} coming soon...
@@ -157,10 +383,26 @@ const ProfilePage = () => {
         </div>
       </div>
 
-      {/* Adding custom hover style */}
+      {/* Global Theme & Animation Modifiers */}
       <style>{`
         .hover-bg-light:hover { background-color: #f8f9fa; }
         .bg-soft-danger { background-color: #fff1f4; }
+        
+        /* Modern Micro-Interaction Field pop out */
+        .smart-input {
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          border: 1px solid #dee2e6;
+        }
+        .smart-input:hover, 
+        .smart-input:focus {
+          transform: translateY(-2px);
+          border-color: #dc3545 !important;
+          box-shadow: 0 5px 12px rgba(220, 53, 69, 0.1) !important;
+        }
+        .form-control:focus {
+          outline: 0;
+          background-color: #fff;
+        }
       `}</style>
     </div>
   );

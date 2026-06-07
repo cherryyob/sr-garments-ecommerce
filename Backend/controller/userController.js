@@ -15,6 +15,11 @@ exports.home = (req, res, next) => {
     });
   });
 };
+exports.postAddress = async (req, res, next) => {
+  const addrssData = req.body;
+  console.log("Received address data:", addrssData);
+};
+
 exports.getProductDetails = async (req, res, next) => {
   const { id } = req.body;
   const productDaatataById = await homeModel.findOne({ idName: id });
@@ -23,29 +28,23 @@ exports.getProductDetails = async (req, res, next) => {
   }
 };
 exports.addToBag = async (req, res, next) => {
+  console.log(req.session, "hihih");
   const userId = req.session.user.id;
   const { id } = req.body;
+
   const objectUser = new mongoose.Types.ObjectId(userId);
 
   const userDocument = await userModel.findByIdAndUpdate(
     { _id: objectUser },
     {
-      $addToSet: { userData: { cart: id } },
-      new: true,
+      $addToSet: { "userData.cart": id },
     },
+    { new: true },
   );
 
-  const bag = new bagModel({ bagId: id });
-  bag
-    .save()
-    .then(() => {
-      bagModel.find().then((data) => {
-        res.status(200).json(data);
-      });
-    })
-    .catch((err) => {
-      console.log("error while saving in bag module : ", err);
-    });
+  if (userDocument) {
+    return res.status(200).json(userDocument.userData.cart);
+  }
 };
 exports.getBag = async (req, res, next) => {
   const userId = req.session.user?.id || null;
@@ -64,11 +63,11 @@ exports.removeItemById = async (req, res, next) => {
   const monguseId = new mongoose.Types.ObjectId(userId);
   const updatedUser = await userModel.findOneAndUpdate(
     { _id: convertToObjectId(userId) },
-    { $pull: { userData: { cart: req.body.id } } },
+    { $pull: { "userData.cart": req.body.id } },
     { new: true },
   );
   console.log("updatedUser", updatedUser);
-  res.status(200).json(updatedUser.userData);
+  res.status(200).json(updatedUser.userData.cart);
 };
 exports.bagItemFindInItems = async (req, res, next) => {
   const userCartData = await userModel.findById(
