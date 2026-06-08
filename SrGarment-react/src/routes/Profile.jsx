@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import { motion, AnimatePresence } from "framer-motion";
-import { saveAddress } from "../services/authService.js";
+import { saveAddress, getAddress } from "../services/authService.js";
 import { useSelector } from "react-redux";
 import {
   IoSettingsOutline,
@@ -11,12 +12,24 @@ import {
   IoChevronForward,
   IoPersonOutline,
   IoBagCheckOutline,
+  IoPencilOutline,
+  IoTrashOutline,
 } from "react-icons/io5";
 
 // ==========================================
 // SMART ADDRESS SECTION COMPONENT
 // ==========================================
 const SmartAddressSection = () => {
+  // Fetch saved addresses on component load
+  const [addresses, setAddresses] = useState([]);
+  useEffect(() => {
+    const fn = async () => {
+      const addr = await getAddress();
+      console.log("Fetching saved addresses...", addr);
+      setAddresses(addr);
+    };
+    fn();
+  }, []);
   const [formData, setFormData] = useState({
     fullName: "",
     pincode: "",
@@ -73,161 +86,246 @@ const SmartAddressSection = () => {
       e.stopPropagation();
     } else {
       const savedResult = await saveAddress(formData);
-      alert("Address received successfully!");
+      if (savedResult) {
+        alert("Address received successfully!");
+      } else {
+        alert("Failed to save address. Please try again.");
+      }
     }
     setValidated(true);
   };
 
   return (
     <div className="text-start">
-      <h4 className="fw-bold mb-1 text-dark fs-5">Add New Address</h4>
-      <p className="text-muted small mb-4">
-        Enter your pincode to automatically pull city and state info.
-      </p>
+      {/* Saved Addresses Section */}
+      <div className="mb-5 pb-5 border-bottom">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">
+          Your Saved Addresses
+        </h3>
 
-      <form
-        className={`needs-validation ${validated ? "was-validated" : ""}`}
-        noValidate
-        onSubmit={handleSubmit}
-      >
-        <div className="row g-3">
-          {/* Full Name */}
-          <div className="col-12">
-            <label className="form-label small fw-semibold text-secondary mb-1">
-              Full Name
-            </label>
-            <input
-              type="text"
-              id="fullName"
-              className="form-control smart-input py-2"
-              placeholder="e.g. Raghav Jha"
-              value={formData.fullName}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          {/* Pincode */}
-          <div className="col-12 position-relative">
-            <label className="form-label small fw-semibold text-secondary mb-1">
-              Pincode (ZIP)
-            </label>
-            <input
-              type="text"
-              id="pincode"
-              className="form-control smart-input py-2"
-              placeholder="Enter 6-digit pincode"
-              maxLength="6"
-              pattern="^[1-9][0-9]{5}$"
-              value={formData.pincode}
-              onChange={handleChange}
-              required
-            />
-            {loading && (
+        {/* If no addresses are found */}
+        {addresses.length === 0 ? (
+          <p className="text-gray-500 text-sm italic">
+            No addresses saved yet.
+          </p>
+        ) : (
+          /* Grid layout: 1 column on mobile, 2 columns on larger screens */
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {addresses.map((addr) => (
               <div
-                className="spinner-border spinner-border-sm text-danger position-absolute"
-                style={{ right: "15px", top: "38px" }}
-                role="status"
+                key={addr._id}
+                className="border border-gray-200 rounded-xl p-4 bg-white shadow-sm relative d-flex flex-column justify-between hover:shadow-md transition-shadow duration-200"
+              >
+                <div>
+                  {/* Badge for Default Address */}
+                  {addr.isDefault && (
+                    <span className="absolute top-3 right-3 bg-soft-danger text-danger text-xs font-bold px-2 py-0.5 rounded-full">
+                      Default
+                    </span>
+                  )}
+
+                  {/* User Name */}
+                  <h4 className="font-bold text-gray-900 text-base mb-2">
+                    {addr.fullName}
+                  </h4>
+
+                  {/* Address Details */}
+                  <p className="text-sm text-gray-600 leading-relaxed mb-1">
+                    {addr.streetAddress}, {addr.areaAddress}
+                  </p>
+
+                  {/* Landmark if available */}
+                  {addr.landmark && (
+                    <p className="text-sm text-gray-500 italic mb-1">
+                      Landmark: {addr.landmark}
+                    </p>
+                  )}
+
+                  {/* City, State & Pincode */}
+                  <p className="text-sm text-gray-700 font-medium mb-3">
+                    {addr.city}, {addr.state} -{" "}
+                    <span className="text-gray-900 font-semibold">
+                      {addr.pincode}
+                    </span>
+                  </p>
+                </div>
+
+                {/* Big Prominent Action Buttons */}
+                <div className="row g-2 pt-2 mt-auto border-top border-light">
+                  <div className="col-6">
+                    <button
+                      onClick={() => console.log("Edit requested", addr)}
+                      className="btn btn-outline-danger w-100 py-2 d-flex align-items-center justify-content-center gap-2 small fw-bold rounded-3"
+                    >
+                      <IoPencilOutline size={16} /> Edit
+                    </button>
+                  </div>
+                  <div className="col-6">
+                    <button
+                      onClick={() => console.log("Delete requested", addr._id)}
+                      className="btn btn-outline-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2 small fw-bold rounded-3"
+                    >
+                      <IoTrashOutline size={16} /> Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Added Extra Top Margin and Padding for Distinct Visual Separation */}
+      <div className="mt-5 pt-3">
+        <h4 className="fw-bold mb-1 text-dark fs-5">Add New Address</h4>
+        <p className="text-muted small mb-4">
+          Enter your pincode to automatically pull city and state info.
+        </p>
+
+        <form
+          className={`needs-validation ${validated ? "was-validated" : ""}`}
+          noValidate
+          onSubmit={handleSubmit}
+        >
+          <div className="row g-3">
+            {/* Full Name */}
+            <div className="col-12">
+              <label className="form-label small fw-semibold text-secondary mb-1">
+                Full Name
+              </label>
+              <input
+                type="text"
+                id="fullName"
+                className="form-control smart-input py-2"
+                placeholder="e.g. Raghav Jha"
+                value={formData.fullName}
+                onChange={handleChange}
+                required
               />
-            )}
-            {pincodeError && (
-              <div className="text-danger small mt-1">{pincodeError}</div>
-            )}
-            <div className="invalid-feedback">
-              Please enter a valid 6-digit postal code.
+            </div>
+
+            {/* Pincode */}
+            <div className="col-12 position-relative">
+              <label className="form-label small fw-semibold text-secondary mb-1">
+                Pincode (ZIP)
+              </label>
+              <input
+                type="text"
+                id="pincode"
+                className="form-control smart-input py-2"
+                placeholder="Enter 6-digit pincode"
+                maxLength="6"
+                pattern="^[1-9][0-9]{5}$"
+                value={formData.pincode}
+                onChange={handleChange}
+                required
+              />
+              {loading && (
+                <div
+                  className="spinner-border spinner-border-sm text-danger position-absolute"
+                  style={{ right: "15px", top: "38px" }}
+                  role="status"
+                />
+              )}
+              {pincodeError && (
+                <div className="text-danger small mt-1">{pincodeError}</div>
+              )}
+              <div className="invalid-feedback">
+                Please enter a valid 6-digit postal code.
+              </div>
+            </div>
+
+            {/* Street Address */}
+            <div className="col-12">
+              <label className="form-label small fw-semibold text-secondary mb-1">
+                Flat, House no., Building, Apartment
+              </label>
+              <input
+                type="text"
+                id="streetAddress"
+                className="form-control smart-input py-2"
+                placeholder="Floor, Flat/House No., Building Name"
+                value={formData.streetAddress}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* Area Address */}
+            <div className="col-12">
+              <label className="form-label small fw-semibold text-secondary mb-1">
+                Area, Colony, Street, Sector
+              </label>
+              <input
+                type="text"
+                id="areaAddress"
+                className="form-control smart-input py-2"
+                placeholder="Area details"
+                value={formData.areaAddress}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            {/* City (Auto-filled) */}
+            <div className="col-md-6">
+              <label className="form-label small fw-semibold text-secondary mb-1">
+                City / District
+              </label>
+              <input
+                type="text"
+                id="city"
+                className="form-control smart-input py-2 bg-light"
+                placeholder="Auto-filled"
+                value={formData.city}
+                readOnly
+                required
+              />
+            </div>
+
+            {/* State (Auto-filled) */}
+            <div className="col-md-6">
+              <label className="form-label small fw-semibold text-secondary mb-1">
+                State
+              </label>
+              <input
+                type="text"
+                id="state"
+                className="form-control smart-input py-2 bg-light"
+                placeholder="Auto-filled"
+                value={formData.state}
+                readOnly
+                required
+              />
+            </div>
+
+            {/* Landmark */}
+            <div className="col-12">
+              <label className="form-label small fw-semibold text-secondary mb-1">
+                Landmark{" "}
+                <span className="text-muted font-monospace text-lowercase">
+                  (Optional)
+                </span>
+              </label>
+              <input
+                type="text"
+                id="landmark"
+                className="form-control smart-input py-2"
+                placeholder="e.g. Near Apollo Hospital"
+                value={formData.landmark}
+                onChange={handleChange}
+              />
             </div>
           </div>
 
-          {/* Street Address */}
-          <div className="col-12">
-            <label className="form-label small fw-semibold text-secondary mb-1">
-              Flat, House no., Building, Apartment
-            </label>
-            <input
-              type="text"
-              id="streetAddress"
-              className="form-control smart-input py-2"
-              placeholder="Floor, Flat/House No., Building Name"
-              value={formData.streetAddress}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          {/* Area Address */}
-          <div className="col-12">
-            <label className="form-label small fw-semibold text-secondary mb-1">
-              Area, Colony, Street, Sector
-            </label>
-            <input
-              type="text"
-              id="areaAddress"
-              className="form-control smart-input py-2"
-              placeholder="Area details"
-              value={formData.areaAddress}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          {/* City (Auto-filled) */}
-          <div className="col-md-6">
-            <label className="form-label small fw-semibold text-secondary mb-1">
-              City / District
-            </label>
-            <input
-              type="text"
-              id="city"
-              className="form-control smart-input py-2 bg-light"
-              placeholder="Auto-filled"
-              value={formData.city}
-              readOnly
-              required
-            />
-          </div>
-
-          {/* State (Auto-filled) */}
-          <div className="col-md-6">
-            <label className="form-label small fw-semibold text-secondary mb-1">
-              State
-            </label>
-            <input
-              type="text"
-              id="state"
-              className="form-control smart-input py-2 bg-light"
-              placeholder="Auto-filled"
-              value={formData.state}
-              readOnly
-              required
-            />
-          </div>
-
-          {/* Landmark */}
-          <div className="col-12">
-            <label className="form-label small fw-semibold text-secondary mb-1">
-              Landmark{" "}
-              <span className="text-muted font-monospace text-lowercase">
-                (Optional)
-              </span>
-            </label>
-            <input
-              type="text"
-              id="landmark"
-              className="form-control smart-input py-2"
-              placeholder="e.g. Near Apollo Hospital"
-              value={formData.landmark}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          className="btn btn-danger w-100 mt-4 py-2.5 fw-semibold rounded-3 shadow-sm"
-        >
-          Save Address
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="btn btn-danger w-100 mt-4 py-2.5 fw-semibold rounded-3 shadow-sm"
+          >
+            Save Address
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

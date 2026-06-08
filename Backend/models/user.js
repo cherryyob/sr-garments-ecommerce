@@ -19,6 +19,9 @@ const userModel = mongoose.Schema({
   firstname: { type: String, require: [true, "Enter a valid name"] },
   userData: {
     cart: { type: [String], unique: true, default: [] },
+    Addresses: { type: Object, default: {} },
+    payment: { type: String, default: "" },
+    orders: { type: [String], default: [] },
   },
 });
 module.exports = mongoose.model("userModel", userModel);

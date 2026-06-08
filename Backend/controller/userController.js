@@ -15,9 +15,33 @@ exports.home = (req, res, next) => {
     });
   });
 };
+exports.getAddress = async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const addressData = await userModel.findById(userId, "userData.Addresses");
+    if (addressData) {
+      console.log("Fetched address data:", addressData.userData.Addresses);
+      return res.status(200).json(addressData.userData.Addresses);
+    } else {
+      return res.status(404).json({ message: "Address not found" });
+    }
+  } catch (err) {
+    console.error("Error fetching address:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 exports.postAddress = async (req, res, next) => {
   const addrssData = req.body;
-  console.log("Received address data:", addrssData);
+  const addressSave = await userModel.findByIdAndUpdate(
+    { _id: new mongoose.Types.ObjectId(req.session.user.id) },
+    { $set: { "userData.Addresses": addrssData } },
+  );
+
+  if (addressSave) {
+    res.status(200).json({ message: "Address saved successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to save address" });
+  }
 };
 
 exports.getProductDetails = async (req, res, next) => {

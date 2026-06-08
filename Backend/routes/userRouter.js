@@ -9,5 +9,6 @@ userRouter.post("/removeItemById", userController.removeItemById);
 userRouter.get("/bagItemFindInItems", userController.bagItemFindInItems);
 userRouter.post("/getProductDetails", userController.getProductDetails);
 userRouter.post("/userAddress", userController.postAddress);
+userRouter.get("/getAddress", userController.getAddress);
 
 module.exports = userRouter;
