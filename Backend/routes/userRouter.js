@@ -10,5 +10,8 @@ userRouter.get("/bagItemFindInItems", userController.bagItemFindInItems);
 userRouter.post("/getProductDetails", userController.getProductDetails);
 userRouter.post("/userAddress", userController.postAddress);
 userRouter.get("/getAddress", userController.getAddress);
+userRouter.post("/addWishlist",userController.addWishlist);
+userRouter.get("/getWishlist",userController.getWishlist);
+userRouter.post("/removeWishlist",userController.removeWishlist);
 
 module.exports = userRouter;

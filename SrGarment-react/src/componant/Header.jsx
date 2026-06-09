@@ -30,12 +30,9 @@ const Header = () => {
       ? JSON.parse(localStorage.getItem("userlFind"))
       : null;
 
-  console.log("userFromStorge", userFromStorge);
-
   const dispatch = useDispatch();
   // Get authentication state from Redux store
   const isLoggedIn = useSelector((store) => store.auth.isLoggedIn);
-  console.log(isLoggedIn, "is loged in header");
   // If user data exists in localStorage, update Redux store
   useEffect(() => {
     if (userFromStorge) {
@@ -57,8 +54,6 @@ const Header = () => {
 
     localStorage.removeItem("userlFind");
     dispatch(logout());
-
-    console.log("Logged out successfully");
   };
 
   return (

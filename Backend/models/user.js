@@ -22,6 +22,7 @@ const userModel = mongoose.Schema({
     Addresses: { type: Object, default: {} },
     payment: { type: String, default: "" },
     orders: { type: [String], default: [] },
+    wishlist: { type: [String], default: [] },
   },
 });
 module.exports = mongoose.model("userModel", userModel);

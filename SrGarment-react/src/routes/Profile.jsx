@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { saveAddress, getAddress } from "../services/authService.js";
+import { saveAddress, getAddress } from "../services/saveAddress";
 import { useSelector } from "react-redux";
 import {
   IoSettingsOutline,
@@ -22,14 +22,18 @@ import {
 const SmartAddressSection = () => {
   // Fetch saved addresses on component load
   const [addresses, setAddresses] = useState([]);
+  const [updateAddress, setUpdateAddress] = useState(0); // Trigger re-fetch when address is added/updated
+
   useEffect(() => {
     const fn = async () => {
       const addr = await getAddress();
-      console.log("Fetching saved addresses...", addr);
-      setAddresses(addr);
+      if (addr) {
+        console.log("Fetched addresses:", addr);
+        setAddresses(addr);
+      }
     };
     fn();
-  }, []);
+  }, [updateAddress]);
   const [formData, setFormData] = useState({
     fullName: "",
     pincode: "",
@@ -88,11 +92,22 @@ const SmartAddressSection = () => {
       const savedResult = await saveAddress(formData);
       if (savedResult) {
         alert("Address received successfully!");
+        setFormData({
+          fullName: "",
+          pincode: "",
+          streetAddress: "",
+          areaAddress: "",
+          city: "",
+          state: "",
+          landmark: "",
+        });
+        setValidated(false);
+        setUpdateAddress((prev) => prev + 1); // Trigger re-fetch of addresses
       } else {
         alert("Failed to save address. Please try again.");
+        setValidated(true);
       }
     }
-    setValidated(true);
   };
 
   return (

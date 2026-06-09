@@ -6,7 +6,7 @@ const FetchBagItem = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     const storage = localStorage.getItem("userlFind");
-    console.log("storage", storage);
+
     const controller = new AbortController();
     const signal = controller.signal;
     fetch("http://localhost:3000/bag", { credentials: "include", signal })

@@ -16,25 +16,35 @@ exports.home = (req, res, next) => {
   });
 };
 exports.getAddress = async (req, res, next) => {
-  const { userId } = req.body;
+  const userId = new mongoose.Types.ObjectId(req.session.user?.id || null);
   try {
     const addressData = await userModel.findById(userId, "userData.Addresses");
-    if (addressData) {
-      console.log("Fetched address data:", addressData.userData.Addresses);
-      return res.status(200).json(addressData.userData.Addresses);
+    console.log("Fetched addresses:", addressData);
+    if (addressData && addressData.userData) {
+      console.log("adsdsdsd", addressData.userData.Addresses);
+      const fetchAddress = Array.isArray(addressData.userData.Addresses)
+        ? addressData.userData.Addresses
+        : addressData.userData.Addresses
+          ? [addressData.userData.Addresses]
+          : [];
+
+      return res.status(200).json({
+        message: "Addresses fetched successfully",
+        data: fetchAddress,
+      });
     } else {
-      return res.status(404).json({ message: "Address not found" });
+      return res.status(404).json({ message: "Addresses not found", data: [] });
     }
   } catch (err) {
-    console.error("Error fetching address:", err);
-    return res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error", data: [] });
   }
 };
 exports.postAddress = async (req, res, next) => {
   const addrssData = req.body;
   const addressSave = await userModel.findByIdAndUpdate(
     { _id: new mongoose.Types.ObjectId(req.session.user.id) },
-    { $set: { "userData.Addresses": addrssData } },
+    { $push: { "userData.Addresses": addrssData } },
+    { new: true },
   );
 
   if (addressSave) {
@@ -107,6 +117,18 @@ exports.bagItemFindInItems = async (req, res, next) => {
     res.status(200).json({ err: "looks cart is empty" });
   }
 };
+//wishlist
+exports.addWishlist = async (req, res, next) => {
+  console.log("addWishlist called with body:", req.body.id);
+};
+exports.getWishlist = async (req, res, next) => {
+  console.log("getWishlist called with body:");
+};
+exports.removeWishlist = async (req, res, next) => {
+  console.log("removeWishlist called with body:");
+};
+
+//local ues perppuse
 const convertToObjectId = (id) => {
   try {
     return new mongoose.Types.ObjectId(id);

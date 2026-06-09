@@ -5,14 +5,21 @@ import { FcDeleteDatabase } from "react-icons/fc";
 import { FaRegHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import {
+  addWishList,
+  removeWishList,
+  getWishList,
+} from "../services/wishListService";
+import {
   handelAddToBagButton,
   handelRemoveButton,
 } from "../../utility/helperFunctions";
 
 const HomeItem = ({ item }) => {
+  const handelWishList = (productId) => {
+    addWishList(productId);
+  };
   // Accessing the bag items from the Redux store to determine if the current item is in the bag
   const bagItem = useSelector((store) => store.bagItemsState.bageItemId);
-  console.log("bagItem in home item", bagItem);
 
   const dispatch = useDispatch();
 
@@ -82,7 +89,9 @@ const HomeItem = ({ item }) => {
             )}
             <button
               type="button"
-              onClick={handelAddToBagButton}
+              onClick={() => {
+                handelWishList(item.idName);
+              }}
               className="btn btn-outline-success px-3"
             >
               <FaRegHeart />

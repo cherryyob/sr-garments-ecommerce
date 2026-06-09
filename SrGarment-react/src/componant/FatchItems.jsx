@@ -24,7 +24,7 @@ const FatchingItems = () => {
     fetch("http://localhost:3000/items", { signal, credentials: "include" })
       .then((res) => res.json())
       .then(({ items, isLogin, user }) => {
-        console.log(isLogin, "is login in fatch");
+      
         dispatch(markFatchDone());
         if (isLogin) {
           dispatch(login({ user: user }));
