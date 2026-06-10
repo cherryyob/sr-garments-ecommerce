@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { saveAddress, getAddress } from "../services/saveAddress";
+import {
+  saveAddress,
+  getAddress,
+  removeAddress,
+} from "../services/saveAddress";
 import { useSelector } from "react-redux";
 import {
   IoSettingsOutline,
@@ -126,7 +130,7 @@ const SmartAddressSection = () => {
         ) : (
           /* Grid layout: 1 column on mobile, 2 columns on larger screens */
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {addresses.map((addr) => (
+            {addresses.map((addr, index) => (
               <div
                 key={addr._id}
                 className="border border-gray-200 rounded-xl p-4 bg-white shadow-sm relative d-flex flex-column justify-between hover:shadow-md transition-shadow duration-200"
@@ -177,7 +181,10 @@ const SmartAddressSection = () => {
                   </div>
                   <div className="col-6">
                     <button
-                      onClick={() => console.log("Delete requested", addr._id)}
+                      onClick={async () => {
+                        const updatedAddress = await removeAddress(index);
+                        setUpdateAddress((prev) => prev + 1);
+                      }}
                       className="btn btn-outline-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2 small fw-bold rounded-3"
                     >
                       <IoTrashOutline size={16} /> Remove

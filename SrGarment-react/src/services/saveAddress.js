@@ -27,3 +27,19 @@ export const getAddress = async () => {
     return alert("network error drink some water may be network work:");
   }
 };
+export const removeAddress = async (index) => {
+  console.log(index, "from service layer");
+  try {
+    const response = await fetch("http://localhost:3000/removeAddress", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ index }),
+    });
+    const data = await response.json();
+    console.log(data, "klkl");
+    return data.data;
+  } catch (err) {
+    console.log(err, "err whlile removing address forntend");
+  }
+};

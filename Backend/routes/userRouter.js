@@ -8,10 +8,13 @@ userRouter.get("/bag", userController.getBag);
 userRouter.post("/removeItemById", userController.removeItemById);
 userRouter.get("/bagItemFindInItems", userController.bagItemFindInItems);
 userRouter.post("/getProductDetails", userController.getProductDetails);
+// ADDRESS ROUTES
+userRouter.post("/removeAddress", userController.removeAddress);
 userRouter.post("/userAddress", userController.postAddress);
 userRouter.get("/getAddress", userController.getAddress);
-userRouter.post("/addWishlist",userController.addWishlist);
-userRouter.get("/getWishlist",userController.getWishlist);
-userRouter.post("/removeWishlist",userController.removeWishlist);
+// WISHLIST ROUTES
+userRouter.post("/addWishlist", userController.addWishlist);
+userRouter.get("/getWishlist", userController.getWishlist);
+userRouter.post("/removeWishlist", userController.removeWishlist);
 
 module.exports = userRouter;

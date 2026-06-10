@@ -15,6 +15,18 @@ exports.home = (req, res, next) => {
     });
   });
 };
+// Address apis
+exports.removeAddress = async (req, res, next) => {
+  const { index } = req.body;
+  const userId = new mongoose.Types.ObjectId(req.session.user?.id || null);
+  const user = await userModel.findById(userId);
+  user.userData.Addresses.splice(index, 1);
+  await user.save();
+  return res.status(200).json({
+    message: "Addresses fetched successfully",
+    data: user.userData.Addresses,
+  });
+};
 exports.getAddress = async (req, res, next) => {
   const userId = new mongoose.Types.ObjectId(req.session.user?.id || null);
   try {

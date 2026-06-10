@@ -19,7 +19,7 @@ const userModel = mongoose.Schema({
   firstname: { type: String, require: [true, "Enter a valid name"] },
   userData: {
     cart: { type: [String], unique: true, default: [] },
-    Addresses: { type: Object, default: {} },
+    Addresses: { type: Array },
     payment: { type: String, default: "" },
     orders: { type: [String], default: [] },
     wishlist: { type: [String], default: [] },
