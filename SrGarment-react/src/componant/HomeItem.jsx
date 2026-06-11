@@ -13,10 +13,27 @@ import {
   handelAddToBagButton,
   handelRemoveButton,
 } from "../../utility/helperFunctions";
+import { useState } from "react";
 
 const HomeItem = ({ item }) => {
-  const handelWishList = (productId) => {
-    addWishList(productId);
+  const [updateAddress, setUpdateAddress] = useState(0);
+  //setUpdateAddress((prev) => prev + 1);
+  const [wishList, setWishList] = useState([]);
+  useEffect(() => {
+    const fn = async () => {
+      const wishLst = await getWishList();
+      setWishList(wishLst || []);
+      console.log(wishLst, "jijiji");
+    };
+    fn();
+  }, []);
+
+  const handelWishList = async (productId) => {
+    const updatedWishList = await addWishList(productId);
+    if (!updatedWishList) {
+      alert("Already In You Cart");
+    }
+    console.log(updatedWishList, "hihihi");
   };
   // Accessing the bag items from the Redux store to determine if the current item is in the bag
   const bagItem = useSelector((store) => store.bagItemsState.bageItemId);

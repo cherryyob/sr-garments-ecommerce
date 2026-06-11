@@ -7,7 +7,7 @@ const userModel = mongoose.Schema({
     enum: ["host", "guest"],
     default: "guest",
   },
-  password: { type: String, require: [true, "password must require"] },
+  password: { type: String, required: [true, "password must require"] },
   email: {
     type: String,
     required: [true, "email must needed"],
@@ -15,8 +15,8 @@ const userModel = mongoose.Schema({
     trim: true,
     match: [/^\S+@\S+\.\S+$/, "Please enter a valid email"],
   },
-  lastname: { type: String, require: [true, "Last name must needed"] },
-  firstname: { type: String, require: [true, "Enter a valid name"] },
+  lastname: { type: String, required: [true, "Last name must needed"] },
+  firstname: { type: String, required: [true, "Enter a valid name"] },
   userData: {
     cart: { type: [String], unique: true, default: [] },
     Addresses: { type: Array },

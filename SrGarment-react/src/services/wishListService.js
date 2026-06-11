@@ -8,12 +8,11 @@ export const addWishList = async (productId) => {
       body: JSON.stringify({ id: productId }),
     });
     const result = await response.json();
-    if (!result.data) {
-      console.log("Failed to add to wishlist", result.message);
-      return;
+    if (!result.succes) {
+      return false;
     } else {
       console.log("Added to wishlist successfully", result.data);
-      return result;
+      return result.data;
     }
   } catch (err) {
     console.error("Error adding to wishlist:", err);
@@ -26,12 +25,11 @@ export const getWishList = async () => {
       credentials: "include",
     });
     const result = await response.json();
-    if (!result.data) {
-      console.log("No wishlist data found", result.method);
-      return;
+    if (!result.succes) {
+      return result.message;
     } else {
       console.log("Wishlist data fetched successfully", result.data);
-      return result;
+      return result.data;
     }
   } catch (err) {
     console.error("Error fetching wishlist:", err);

@@ -3,6 +3,7 @@ const bagModel = require("../models/bag");
 const homeModel = require("../models/homes");
 const userModel = require("../models/user");
 const mongoose = require("mongoose");
+const { ReturnDocument } = require("mongodb");
 
 exports.home = (req, res, next) => {
   homeModel.find().then((row) => {
@@ -15,7 +16,7 @@ exports.home = (req, res, next) => {
     });
   });
 };
-// Address apis
+// Address api
 exports.removeAddress = async (req, res, next) => {
   const { index } = req.body;
   const userId = new mongoose.Types.ObjectId(req.session.user?.id || null);
@@ -73,6 +74,7 @@ exports.getProductDetails = async (req, res, next) => {
     res.status(200).json(productDaatataById);
   }
 };
+// CART API
 exports.addToBag = async (req, res, next) => {
   console.log(req.session, "hihih");
   const userId = req.session.user.id;
@@ -129,13 +131,64 @@ exports.bagItemFindInItems = async (req, res, next) => {
     res.status(200).json({ err: "looks cart is empty" });
   }
 };
+
 //wishlist
+
 exports.addWishlist = async (req, res, next) => {
-  console.log("addWishlist called with body:", req.body.id);
+  const { id } = req.body;
+  const userId = new mongoose.Types.ObjectId(req.session.user?.id ?? null);
+  try {
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ succes: false, message: "User not found" });
+    }
+
+    const isDuplicate = user.userData.wishlist.includes(id);
+
+    if (isDuplicate) {
+      return res.status(200).json({
+        succes: false,
+        message: "Already In your wishList",
+        data: user.userData.wishlist, // Send back current list
+      });
+    }
+
+    const response = await userModel.findByIdAndUpdate(
+      userId,
+      { $addToSet: { "userData.wishlist": id } },
+      { returnDocument: "after" },
+    );
+    return res.status(200).json({
+      succes: true,
+      message: "Added to wishList",
+      data: response.userData.wishlist,
+    });
+  } catch (err) {
+    return res.status(200).json({
+      succes: false,
+      message: "Network Issue",
+    });
+  }
 };
+
 exports.getWishlist = async (req, res, next) => {
-  console.log("getWishlist called with body:");
+  const userId = new mongoose.Types.ObjectId(req.session.user?.id ?? null);
+  try {
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ succes: false, message: "User not found" });
+    }
+
+    return res
+      .status(200)
+      .json({
+        succes: true,
+        message: "User found",
+        data: user.userData.wishlist,
+      });
+  } catch (err) {}
 };
+
 exports.removeWishlist = async (req, res, next) => {
   console.log("removeWishlist called with body:");
 };
