@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { login } from "../../store/authSlice";
+import { addToWishList } from "../../store/wishListSlice";
+import { getWishList } from "../services/wishListService";
 import {
   IoPersonOutline,
   IoPerson,
@@ -20,7 +22,6 @@ import { useDispatch, useSelector } from "react-redux";
 import SearchBar from "./SearchBar";
 import { logout } from "../../store/authSlice";
 import { logoutService } from "../services/authService";
-import { useEffect } from "react";
 
 const Header = () => {
   // Check localStorage for user data on component mount
@@ -31,6 +32,19 @@ const Header = () => {
       : null;
 
   const dispatch = useDispatch();
+  //Get wishList from redux
+  const wishList = useSelector((store) => store.wishList);
+  useEffect(() => {
+    const fn = async () => {
+      const wishLst = await getWishList();
+      dispatch(addToWishList(wishLst));
+    };
+    fn();
+  }, []);
+
+  // This will log every time your wishList Redux store updates
+  useEffect(() => {}, [wishList]);
+
   // Get authentication state from Redux store
   const isLoggedIn = useSelector((store) => store.auth.isLoggedIn);
   // If user data exists in localStorage, update Redux store
@@ -195,14 +209,27 @@ const Header = () => {
 
                   <Link
                     to="/wishlist"
-                    className="text-decoration-none text-dark"
+                    className="text-decoration-none text-dark position-relative"
                   >
                     <IconButton
                       iconOutline={IoHeartOutline}
                       iconFilled={IoHeart}
                       label="Wishlist"
-                      activeColor="#ff3f6c"
+                      activeColor="#dc3545"
                     />
+                    {wishList && wishList.length > 0 && (
+                      <motion.span
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        whileHover={{ scale: 1.1 }}
+                        className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                        style={{
+                          fontSize: "10px",
+                        }}
+                      >
+                        {wishList.length}
+                      </motion.span>
+                    )}
                   </Link>
 
                   {/* BAG */}

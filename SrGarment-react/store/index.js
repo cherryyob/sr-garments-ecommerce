@@ -4,6 +4,7 @@ import fatchingStatusSlice from "./fatchingStatushSlice";
 import bagItemSlice from "./bagItemSlice";
 import productDetails from "./productDetails";
 import authSlice from "./authSlice";
+import wishList from "./wishListSlice";
 fatchingStatusSlice;
 
 const srStore = configureStore({
@@ -13,6 +14,7 @@ const srStore = configureStore({
     bagItemsState: bagItemSlice.reducer,
     productDetailsData: productDetails.reducer,
     auth: authSlice.reducer,
+    wishList: wishList.reducer,
   },
 });
 export default srStore;

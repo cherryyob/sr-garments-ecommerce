@@ -1,14 +1,11 @@
 import { useEffect } from "react";
+import { addToWishList } from "../../store/wishListSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { MdAddShoppingCart } from "react-icons/md";
 import { FcDeleteDatabase } from "react-icons/fc";
-import { FaRegHeart } from "react-icons/fa";
+import { PiHeartHalfFill, PiHeartFill } from "react-icons/pi";
 import { Link } from "react-router-dom";
-import {
-  addWishList,
-  removeWishList,
-  getWishList,
-} from "../services/wishListService";
+import { addWishList, removeWishList } from "../services/wishListService";
 import {
   handelAddToBagButton,
   handelRemoveButton,
@@ -16,29 +13,29 @@ import {
 import { useState } from "react";
 
 const HomeItem = ({ item }) => {
-  const [updateAddress, setUpdateAddress] = useState(0);
-  //setUpdateAddress((prev) => prev + 1);
-  const [wishList, setWishList] = useState([]);
-  useEffect(() => {
-    const fn = async () => {
-      const wishLst = await getWishList();
-      setWishList(wishLst || []);
-      console.log(wishLst, "jijiji");
-    };
-    fn();
-  }, []);
+  const dispatch = useDispatch();
 
+  // HANDLE ADD TO WICHLIST
   const handelWishList = async (productId) => {
     const updatedWishList = await addWishList(productId);
     if (!updatedWishList) {
-      alert("Already In You Cart");
+      return alert("Already In You Cart");
     }
+    dispatch(addToWishList(updatedWishList));
     console.log(updatedWishList, "hihihi");
+  };
+
+  //HANDEL REMOVE WISHLIST
+  const handelWishListRemomve = async (idName) => {
+    const removeWishlist = await removeWishList(idName);
+    console.log(removeWishlist, "home");
+    if (removeWishlist.succes) {
+      dispatch(addToWishList(removeWishlist.data));
+    }
   };
   // Accessing the bag items from the Redux store to determine if the current item is in the bag
   const bagItem = useSelector((store) => store.bagItemsState.bageItemId);
-
-  const dispatch = useDispatch();
+  const wishList = useSelector((store) => store.wishList);
 
   return (
     <>
@@ -104,15 +101,28 @@ const HomeItem = ({ item }) => {
                 <MdAddShoppingCart /> Add To Bag
               </button>
             )}
-            <button
-              type="button"
-              onClick={() => {
-                handelWishList(item.idName);
-              }}
-              className="btn btn-outline-success px-3"
-            >
-              <FaRegHeart />
-            </button>
+            {wishList.includes(item.idName) ? (
+              <button
+                title="Remove"
+                type="button"
+                onClick={() => {
+                  handelWishListRemomve(item.idName);
+                }}
+                className="btn btn-outline-danger px-3"
+              >
+                <PiHeartFill size={25} />
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  handelWishList(item.idName);
+                }}
+                className="btn btn-outline-success px-3"
+              >
+                <PiHeartHalfFill size={25} />
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -120,3 +130,4 @@ const HomeItem = ({ item }) => {
   );
 };
 export default HomeItem;
+//////

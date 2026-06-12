@@ -15,6 +15,6 @@ userRouter.get("/getAddress", userController.getAddress);
 // WISHLIST ROUTES
 userRouter.post("/addWishlist", userController.addWishlist);
 userRouter.get("/getWishlist", userController.getWishlist);
-userRouter.post("/removeWishlist", userController.removeWishlist);
+userRouter.post("/removeWishlist", userController.removeWishList);
 
 module.exports = userRouter;

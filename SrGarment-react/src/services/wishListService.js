@@ -1,5 +1,4 @@
 export const addWishList = async (productId) => {
-  console.log("form wishListService", productId);
   try {
     const response = await fetch("http://localhost:3000/addWishlist", {
       method: "POST",
@@ -44,11 +43,11 @@ export const removeWishList = async (productId) => {
       body: JSON.stringify({ id: productId }),
     });
     const result = await response.json();
-    if (!result.data) {
+    if (!result.succes) {
       console.log("Failed to remove from wishlist", result.message);
       return;
     } else {
-      console.log("Removed from wishlist successfully", result.data);
+      console.log("Removed from wishlist successfully", result);
       return result;
     }
   } catch (err) {

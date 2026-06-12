@@ -179,18 +179,40 @@ exports.getWishlist = async (req, res, next) => {
       return res.status(404).json({ succes: false, message: "User not found" });
     }
 
-    return res
-      .status(200)
-      .json({
-        succes: true,
-        message: "User found",
-        data: user.userData.wishlist,
-      });
+    return res.status(200).json({
+      succes: true,
+      message: "User found",
+      data: user.userData.wishlist,
+    });
   } catch (err) {}
 };
+exports.removeWishList = async (req, res, next) => {
+  const { id } = req.body;
+  const objectUserID = new mongoose.Types.ObjectId(req.session?.user?.id);
+  if (!objectUserID || !id) {
+    return res
+      .status(400)
+      .json({ succes: false, message: "User ID or Product ID missing" });
+  }
 
-exports.removeWishlist = async (req, res, next) => {
-  console.log("removeWishlist called with body:");
+  const response = await userModel.findByIdAndUpdate(
+    objectUserID,
+    {
+      $pull: { "userData.wishlist": id },
+    },
+    { returnDocument: "after" },
+  );
+  console.log(response);
+  if (!response) {
+    return res
+      .status(400)
+      .json({ succes: false, message: "error while removing from wishList" });
+  }
+  return res.status(200).json({
+    succes: true,
+    message: "Removed from wishlist",
+    data: response.userData?.wishlist || [],
+  });
 };
 
 //local ues perppuse
